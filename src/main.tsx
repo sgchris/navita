@@ -1,9 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { events } from "./api/events";
 import { commands } from "./api/commands";
 import { installDevLog } from "./lib/devLog";
+import { dispatchAction } from "./lib/actions";
 import { installKeyboard } from "./lib/keyboard";
+import { installMenuSync, syncMenu } from "./lib/menuSync";
 import {
   initWindowActiveClass,
   installNativeFeelGuards,
@@ -31,6 +34,12 @@ async function boot(): Promise<void> {
   installWiring();
   installKeyboard();
   installWindowTitle();
+  installMenuSync();
+  void events.onMenu((id) => {
+    if (import.meta.env.DEV) console.info(`[navita] menu ${id}`);
+    dispatchAction(id);
+    syncMenu(true);
+  });
   void initWindowActiveClass();
 
   const [home] = await Promise.all([commands.homeDir(), usePlaces.getState().load()]);

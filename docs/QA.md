@@ -31,3 +31,16 @@ Items the agent cannot verify (visual / interactive). Run before closing each mi
 - [ ] `⌘⌥S` hides and shows the sidebar (toolbar padding grows so it clears the traffic lights).
 - [ ] A folder containing only `.git` shows no arrow while hidden files are off, and an arrow when they are on; hidden folders in the tree appear/disappear with the eye toggle (except ancestors of the current folder).
 - [ ] An unreadable folder shows "Can’t open folder" when expanded.
+
+## M4 — Navigation, path/status bars, keyboard, menus
+
+Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run tauri dev` and `tail -f /tmp/navita.log`; every menu click and accelerator logs `[navita] menu <id>`.
+
+- [ ] Back/Forward/Up/Home toolbar buttons work and are disabled when not applicable; Back/Forward restore the selection and scroll position; Up selects the folder you came from.
+- [ ] The path bar (bottom) shows `Macintosh HD › … › current`; clicking a segment navigates; the status bar shows `N items, M selected, X GB available`.
+- [ ] **S5 — every menu accelerator fires** (the item's effect happens): ⌘O, ⌘R, ⌥⌘C, ⌘A, ⌘1, ⌘2, ⇧⌘., ⌥⌘S, ⌥⌘P, ⌘/, ⌘[, ⌘], ⌘↑, ⇧⌘H, ⇧⌘D, ⇧⌘O, ⌥⌘L, ⇧⌘A. Report any that do not.
+- [ ] ⌘↓ opens the selection, Tab / ⇧Tab switches focus between sidebar and list, ↑/↓ in the sidebar navigate, ←/→ collapse/expand tree rows.
+- [ ] Menu bar: View ▸ as Icons / as List show a check on the active one, Show Hidden Files is checked after toggling, Sort By shows a check on the active key, Hide/Show Sidebar / Path Bar / Status Bar labels flip, Back/Forward/Enclosing Folder/Open/Reveal are disabled when not applicable.
+- [ ] Context menu on an item: Open, Reveal in Finder, Copy Path, Get Info (first use shows the Automation prompt for Finder; Rename and Move to Trash are disabled until M8). Context menu on empty space: View ▸, Show Hidden Files, Sort By ▸.
+- [ ] Copy Path (menu and context menu) puts the newline-joined paths on the clipboard (paste into a text editor; non-ASCII names are intact).
+- [ ] Help ▸ Navita on GitHub opens https://github.com/sgchris/navita in the browser.

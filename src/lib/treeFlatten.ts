@@ -133,3 +133,17 @@ export function flattenSidebar(input: FlattenInput): SidebarRow[] {
 export function indexOfNode(rows: readonly SidebarRow[], path: string): number {
   return rows.findIndex((r) => r.type === "node" && r.path === path);
 }
+
+/** Stable identity of a row (used for the sidebar keyboard focus). */
+export function rowKey(row: SidebarRow): string {
+  switch (row.type) {
+    case "header":
+      return `header:${row.section}`;
+    case "place":
+      return `place:${row.place.path}`;
+    case "node":
+      return `node:${row.path}`;
+    case "message":
+      return `message:${row.path}`;
+  }
+}

@@ -12,11 +12,12 @@ import {
   type LucideIcon,
 } from "../lib/icons";
 import { ICON_SIZE_LIST } from "../lib/layout";
-import type { SidebarRow } from "../lib/treeFlatten";
+import { rowKey, type SidebarRow } from "../lib/treeFlatten";
 import type { Place } from "../api/bindings/Place";
 import { useNavigation } from "../state/navigation";
 import { usePrefs } from "../state/prefs";
 import { useTree } from "../state/tree";
+import { useUi } from "../state/ui";
 
 const PLACE_ICONS: Record<Place["kind"], LucideIcon> = {
   home: House,
@@ -42,6 +43,7 @@ const rowStyle = (top: number, depth = 0) =>
 export function SidebarRowView({ row, current, top }: Props) {
   const navigate = (path: string) => (e: MouseEvent) => {
     if (e.button !== 0) return;
+    useUi.getState().setSidebarFocusKey(rowKey(row));
     void useNavigation.getState().navigate(path);
   };
 

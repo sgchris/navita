@@ -2,7 +2,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useMemo, useRef } from "react";
 import { cx } from "../lib/cx";
 import { SIDEBAR_ROW_HEIGHT } from "../lib/layout";
-import { flattenSidebar, indexOfNode } from "../lib/treeFlatten";
+import { flattenSidebar, indexOfNode, rowKey } from "../lib/treeFlatten";
 import { useNavigation } from "../state/navigation";
 import { usePlaces } from "../state/places";
 import { usePrefs } from "../state/prefs";
@@ -22,6 +22,7 @@ export function Sidebar() {
   const currentPath = useNavigation((s) => s.currentPath);
   const emphasized = useUi((s) => s.focusedPane === "sidebar" && s.windowActive);
   const setFocusedPane = useUi((s) => s.setFocusedPane);
+  const focusKey = useUi((s) => s.sidebarFocusKey);
 
   const rows = useMemo(
     () =>
@@ -53,6 +54,13 @@ export function Sidebar() {
     scrolledFor.current = currentPath;
     virtualizer.scrollToIndex(index, { align: "auto" });
   }, [rows, currentPath, virtualizer]);
+
+  // Keep the keyboard-focused row visible.
+  useEffect(() => {
+    if (focusKey === null) return;
+    const index = rows.findIndex((r) => rowKey(r) === focusKey);
+    if (index >= 0) virtualizer.scrollToIndex(index, { align: "auto" });
+  }, [focusKey, rows, virtualizer]);
 
   return (
     <div

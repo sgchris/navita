@@ -16,6 +16,8 @@ interface UiState {
   windowActive: boolean;
   flashMessage: string | null;
   renamingPath: string | null;
+  /** Row (see `rowKey`) that has keyboard focus in the sidebar; null until first interaction. */
+  sidebarFocusKey: string | null;
   /** Column count of the Icons view (kept here so the keyboard handler can navigate in 2D). */
   columns: number;
   scrollApi: ScrollApi | null;
@@ -23,6 +25,7 @@ interface UiState {
   setWindowActive: (active: boolean) => void;
   flash: (message: string, durationMs?: number) => void;
   setRenamingPath: (path: string | null) => void;
+  setSidebarFocusKey: (key: string | null) => void;
   setColumns: (columns: number) => void;
   registerScrollApi: (api: ScrollApi | null) => void;
 }
@@ -34,6 +37,7 @@ export const useUi = create<UiState>()((set) => ({
   windowActive: true,
   flashMessage: null,
   renamingPath: null,
+  sidebarFocusKey: null,
   columns: 1,
   scrollApi: null,
   setFocusedPane: (focusedPane) => set({ focusedPane }),
@@ -44,6 +48,7 @@ export const useUi = create<UiState>()((set) => ({
     flashTimer = setTimeout(() => set({ flashMessage: null }), durationMs);
   },
   setRenamingPath: (renamingPath) => set({ renamingPath }),
+  setSidebarFocusKey: (sidebarFocusKey) => set({ sidebarFocusKey }),
   setColumns: (columns) => set({ columns }),
   registerScrollApi: (scrollApi) => set({ scrollApi }),
 }));

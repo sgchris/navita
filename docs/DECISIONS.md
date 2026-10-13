@@ -126,3 +126,12 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - Sidebar components: because the whole sidebar is one flattened virtual list (B12), `SidebarSection.tsx`, `FolderTree.tsx` and `TreeRow.tsx` from the spec's file tree are replaced by `Sidebar.tsx` (list) and `SidebarRowView.tsx` (header, place, node and message rows). `lib/treeFlatten.ts` produces the rows.
 - Sidebar selection uses the same emphasized (accent) / unemphasized (gray) colors as the content pane (B16); place icons are accent-tinted, folder icons use `--icon-folder`.
 - Temporary frontend `⌘⌥S` (sidebar toggle) lives in `lib/keyboard.ts` until M4 adds the menu accelerator.
+
+### M4 notes
+
+- **Order change:** the Rust commands `reveal_in_finder`, `get_info`, `copy_text` and `open_full_disk_access_settings` landed in the M4.3 commit (with the menu) because the menu actions need them; M4.4 contains the JS context menus.
+- **S5 (menu accelerators): not verifiable by the agent.** `osascript` is denied keystroke injection (error 1002) and UI scripting (-1719) in the agent session. The menu builds with every accelerator string accepted (no panic at startup). Whether each chord actually fires is a **[USER] check** (docs/QA.md, M4). Pre-decided fallback: for any chord that does not fire, drop its accelerator from the menu item and handle the chord in `lib/keyboard.ts` via `e.code`, with `preventDefault` (this also suppresses the native menu action, so there is no double firing). WebKit delivers `keydown` for ⌘-chords before the menu sees them, so a chord must never be handled both by the menu accelerator and by `keydown` without `preventDefault`.
+- `syncMenu(true)` runs after every menu click: macOS toggles a CheckMenuItem's mark itself, even when the state did not change (e.g. clicking the already checked "as Icons").
+- The menu items `file.newFolder`, `file.rename`, `file.trash` exist but stay disabled until M8; `dispatchAction` ignores them until then.
+- Sidebar keyboard focus is tracked by row key (`ui.sidebarFocusKey`), not by the current path, because the same folder can appear in several sections (for example "Macintosh HD" in Locations and as the tree root); navigating by "next row after the row whose path is current" would loop.
+- Dev log: menu events are logged as `[navita] menu <id>` in `tauri dev` for manual accelerator testing (`NAVITA_DEV_LOG=<file> npm run tauri dev`).
