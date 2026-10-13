@@ -75,6 +75,7 @@ export const useNavigation = create<NavigationState>()((set, get) => {
           ? goTo(s.history, mode.index)
           : push(s.history, newEntry(listing.path, usePrefs.getState().viewMode)),
     }));
+    usePrefs.getState().setLastPath(listing.path);
     void useTree.getState().revealPath(listing.path);
     void commands.watchDir(listing.path).catch(() => undefined);
 

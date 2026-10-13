@@ -44,3 +44,11 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] Context menu on an item: Open, Reveal in Finder, Copy Path, Get Info (first use shows the Automation prompt for Finder; Rename and Move to Trash are disabled until M8). Context menu on empty space: View ▸, Show Hidden Files, Sort By ▸.
 - [ ] Copy Path (menu and context menu) puts the newline-joined paths on the clipboard (paste into a text editor; non-ASCII names are intact).
 - [ ] Help ▸ Navita on GitHub opens https://github.com/sgchris/navita in the browser.
+
+## M5 — Live refresh, persistence
+
+- [ ] In Terminal, create, rename and delete files in the folder shown by Navita: the list updates within about half a second, and the selection is kept (if the selected item is deleted, the item now at its position is selected).
+- [ ] Delete the folder currently shown (or rename it): Navita jumps to the nearest existing parent folder and shows "“name” no longer exists." in the status bar.
+- [ ] Mount a disk image (or plug in a USB drive): it appears under Locations within about a second; eject it: it disappears.
+- [ ] Empty folder with only hidden items shows "No visible items — N hidden items" with a **Show Hidden Files** button that reveals them.
+- [ ] Change the view mode, sort, hidden toggle, sidebar width, column widths, expand some tree folders, navigate to another folder, quit (⌘Q) and relaunch: the window frame, folder, view mode, sort, hidden toggle, sidebar width, column widths and expanded tree nodes are restored. A deleted last folder falls back to Home.

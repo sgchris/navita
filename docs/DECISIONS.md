@@ -137,3 +137,9 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - Dev log: menu events are logged as `[navita] menu <id>` in `tauri dev` for manual accelerator testing (`NAVITA_DEV_LOG=<file> npm run tauri dev`).
 - Context menus are built with `@tauri-apps/api/menu` (`lib/contextMenu.ts`); `core:menu:default` already contains `allow-new`, `allow-popup` and the item permissions. A dev-only self-check (`lib/devSelfCheck.ts`) builds both menus at boot and logs `[navita] selfcheck context menus ok`, because the agent cannot right-click.
 - `lib/features.ts` exports `FILE_OPS_ENABLED` (false until M8) which gates Rename… and Move to Trash in the item menu.
+
+### M5 notes
+
+- Live refresh was verified end to end in `tauri dev` (file created/removed in the shown folder: `fs:changed` then a silent refresh, 85 -> 86 -> 85 entries within the 3 s check interval).
+- Preferences persist to `~/Library/Application Support/com.sgchris.navita/prefs.json` (`@tauri-apps/plugin-store`, one key per preference, only changed keys are written, debounced 300 ms, flushed on window blur). Verified in `tauri dev`: first launch wrote `lastPath` and `expandedTreePaths`; a second launch with edited values restored `viewMode`, `showHidden`, `sidebarWidth`, `sort` and `lastPath`. The test file was deleted afterwards.
+- Window frame persistence (window-state plugin) cannot be verified by the agent: a programmatic quit (`osascript ... quit`) does not terminate the dev binary, so `.window-state.json` is never written in agent runs. Verify manually (docs/QA.md, M5).

@@ -20,6 +20,7 @@ import { useNavigation } from "./state/navigation";
 import { usePlaces } from "./state/places";
 import { usePrefs } from "./state/prefs";
 import { useTree } from "./state/tree";
+import { initPrefsStorage } from "./state/prefsStorage";
 import { installWiring } from "./state/wiring";
 import "./styles/tokens.css";
 import "./styles/base.css";
@@ -32,6 +33,7 @@ import "./styles/sidebar.css";
 
 async function boot(): Promise<void> {
   installDevLog();
+  await initPrefsStorage();
   installNativeFeelGuards();
   installWiring();
   installKeyboard();
@@ -57,7 +59,7 @@ async function boot(): Promise<void> {
   );
   showWindowAfterPaint();
   void runDevSelfCheck();
-  await useNavigation.getState().init(null);
+  await useNavigation.getState().init(usePrefs.getState().lastPath);
   await useTree.getState().init({
     homePath: home,
     currentPath: useNavigation.getState().currentPath,
@@ -70,7 +72,7 @@ async function boot(): Promise<void> {
       .join(",")}`,
   );
   console.info(
-    `[navita] ready path=${useNavigation.getState().currentPath} entries=${useListing.getState().entries.length}`,
+    `[navita] ready path=${useNavigation.getState().currentPath} entries=${useListing.getState().entries.length} view=${usePrefs.getState().viewMode} hidden=${usePrefs.getState().showHidden} sidebar=${usePrefs.getState().sidebarWidth}`,
   );
 }
 
