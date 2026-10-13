@@ -1,6 +1,8 @@
+pub mod commands;
 pub mod error;
 pub mod fs;
 pub mod model;
+pub mod places;
 
 use tauri_plugin_window_state::StateFlags;
 
@@ -14,6 +16,13 @@ pub fn run() {
                 .with_state_flags(StateFlags::all() - StateFlags::VISIBLE)
                 .build(),
         )
+        .invoke_handler(tauri::generate_handler![
+            commands::fs::list_dir,
+            commands::fs::list_subdirs,
+            commands::fs::home_dir,
+            commands::places::places,
+            commands::places::volume_info,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
