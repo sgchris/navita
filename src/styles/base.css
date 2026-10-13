@@ -1,0 +1,74 @@
+/* Native-feel rules (spec section 8.6). Rule numbers in comments. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  cursor: default; /* 2 */
+  -webkit-user-select: none; /* 1 */
+  user-select: none;
+}
+
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
+:focus,
+:focus-visible {
+  outline: none; /* 3 */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  overflow: hidden; /* 6 */
+  overscroll-behavior: none;
+  touch-action: none; /* 5 */
+  background: transparent;
+}
+
+body {
+  overflow: hidden; /* 6 */
+  overscroll-behavior: none;
+  background: transparent; /* 11 */
+  color: var(--label);
+  font: var(--font-size) / 1.3 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  -webkit-user-drag: none; /* 7 */
+  user-drag: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+/* 9: inactive window */
+html.window-inactive .toolbar__button,
+html.window-inactive .toolbar__title {
+  color: var(--label-tertiary);
+}
+
+/* 10: only macOS-like animations; respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

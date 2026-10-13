@@ -1,0 +1,133 @@
+/*
+ * Design tokens. Every system color is declared as a fallback value first and then overridden by the
+ * WebKit system-color keyword inside @supports, so unsupported keywords silently keep the fallback.
+ * Later rules win at equal specificity: fallbacks (light), fallbacks (dark), keywords.
+ */
+:root {
+  color-scheme: light dark;
+  --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --font-size: 13px;
+
+  /* fallbacks: light */
+  --label: rgba(0, 0, 0, 0.85);
+  --label-secondary: rgba(0, 0, 0, 0.5);
+  --label-tertiary: rgba(0, 0, 0, 0.25);
+  --separator: rgba(0, 0, 0, 0.1);
+  --accent: #007aff;
+  --selection-bg: var(--accent);
+  --selection-bg-unemphasized: #dcdcdc;
+  --selection-text: #ffffff;
+  --content-bg: #ffffff;
+
+  --control-bg: color-mix(in srgb, var(--label) 7%, transparent);
+  --control-bg-hover: color-mix(in srgb, var(--label) 11%, transparent);
+  --control-bg-active: color-mix(in srgb, var(--label) 16%, transparent);
+
+  --radius-panel: 16px;
+  --radius-control: 999px;
+  --radius-row: 6px;
+  --radius-cell: 8px;
+
+  --toolbar-height: 52px;
+  --column-header-height: 28px;
+  --row-height: 24px;
+  --sidebar-row-height: 28px;
+  --path-bar-height: 24px;
+  --status-bar-height: 22px;
+  --sidebar-inset: 8px;
+  --tree-indent: 16px;
+
+  /* icon tints: light */
+  --icon-folder: #007aff;
+  --icon-application: #007aff;
+  --icon-image: #30b0c7;
+  --icon-video: #af52de;
+  --icon-audio: #ff2d55;
+  --icon-pdf: #ff3b30;
+  --icon-text: #8e8e93;
+  --icon-code: #5856d6;
+  --icon-archive: #a2845e;
+  --icon-disk: #8e8e93;
+  --icon-document: #007aff;
+  --icon-spreadsheet: #34c759;
+  --icon-presentation: #ff9500;
+  --icon-package: #a2845e;
+  --icon-unknown: #8e8e93;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* fallbacks: dark */
+    --label: rgba(255, 255, 255, 0.85);
+    --label-secondary: rgba(255, 255, 255, 0.55);
+    --label-tertiary: rgba(255, 255, 255, 0.25);
+    --separator: rgba(255, 255, 255, 0.1);
+    --accent: #0a84ff;
+    --selection-bg-unemphasized: #464646;
+    --content-bg: #1e1e1e;
+
+    /* icon tints: dark */
+    --icon-folder: #0a84ff;
+    --icon-application: #0a84ff;
+    --icon-image: #40c8e0;
+    --icon-video: #bf5af2;
+    --icon-audio: #ff375f;
+    --icon-pdf: #ff453a;
+    --icon-text: #98989d;
+    --icon-code: #5e5ce6;
+    --icon-archive: #ac8e68;
+    --icon-disk: #98989d;
+    --icon-document: #0a84ff;
+    --icon-spreadsheet: #30d158;
+    --icon-presentation: #ff9f0a;
+    --icon-package: #ac8e68;
+    --icon-unknown: #98989d;
+  }
+}
+
+/* system color keywords (each guarded separately; outcome recorded in docs/DECISIONS.md) */
+@supports (color: -apple-system-label) {
+  :root {
+    --label: -apple-system-label;
+  }
+}
+@supports (color: -apple-system-secondary-label) {
+  :root {
+    --label-secondary: -apple-system-secondary-label;
+  }
+}
+@supports (color: -apple-system-tertiary-label) {
+  :root {
+    --label-tertiary: -apple-system-tertiary-label;
+  }
+}
+@supports (color: -apple-system-separator) {
+  :root {
+    --separator: -apple-system-separator;
+  }
+}
+@supports (color: -apple-system-control-accent) {
+  :root {
+    --accent: -apple-system-control-accent;
+  }
+}
+@supports (color: -apple-system-selected-content-background) {
+  :root {
+    --selection-bg: -apple-system-selected-content-background;
+  }
+}
+@supports (color: -apple-system-unemphasized-selected-content-background) {
+  :root {
+    --selection-bg-unemphasized: -apple-system-unemphasized-selected-content-background;
+  }
+}
+@supports (color: -apple-system-alternate-selected-control-text) {
+  :root {
+    --selection-text: -apple-system-alternate-selected-control-text;
+  }
+}
+@supports (color: -apple-system-text-background) {
+  :root {
+    --content-bg: -apple-system-text-background;
+  }
+}
