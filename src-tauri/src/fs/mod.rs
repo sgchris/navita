@@ -3,6 +3,7 @@ pub mod kind;
 pub mod listing;
 pub mod ops;
 pub mod package;
+pub mod paste;
 
 use std::path::{Path, PathBuf};
 

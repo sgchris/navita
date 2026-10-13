@@ -112,3 +112,14 @@ pub struct MenuState {
     pub can_forward: bool,
     pub can_up: bool,
 }
+
+/// Files currently on the system clipboard plus its change counter.
+#[derive(Debug, Clone, Serialize, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export)]
+pub struct ClipboardFiles {
+    pub paths: Vec<String>,
+    /// `NSPasteboard.changeCount`; detects that the clipboard changed since a Cut.
+    #[ts(type = "number")]
+    pub change_count: i64,
+}

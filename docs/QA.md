@@ -99,3 +99,10 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] In List view every folder (including an empty one) starts with a `..` row; it is absent in Icons view and at `/`; it stays first for every sort order and is shown even with hidden files off.
 - [ ] Click `..` selects it; Enter, ⌘↓ or double-click goes to the parent and selects the folder you came from; arrow keys move through it.
 - [ ] ⌘A then Move to Trash / Copy Path / Reveal never includes `..`; the status bar counts only real items.
+
+### S6 — Cut / Copy / Paste
+
+- [ ] Right-click a file: **Cut** and **Copy** are listed; right-click a folder: Cut, Copy and **Paste** (inside that folder); right-click empty space: **Paste** (current folder). Paste is greyed out when the clipboard holds no files.
+- [ ] Copy in Navita → switch to Finder → ⌘V pastes the files there; copy files in Finder (⌘C) → Paste in Navita copies them.
+- [ ] Cut in Navita → Paste in Navita moves the items (they leave the old folder); Cut in Navita → ⌘V in Finder copies them (documented limitation).
+- [ ] Pasting an item into the folder it is already in creates `name copy.ext`; pasting where the name exists never overwrites; a folder cannot be pasted into itself (status message).

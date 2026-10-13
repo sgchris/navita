@@ -1,3 +1,4 @@
+pub mod clipboard;
 pub mod commands;
 pub mod error;
 pub mod fs;
@@ -30,6 +31,9 @@ pub fn run() {
         })
         .on_menu_event(|app, event| menu::handle_event(app, event.id().as_ref()))
         .invoke_handler(tauri::generate_handler![
+            commands::clipboard::clipboard_read_files,
+            commands::clipboard::clipboard_write_files,
+            commands::clipboard::paste_files,
             commands::fs::list_dir,
             commands::fs::list_subdirs,
             commands::fs::home_dir,

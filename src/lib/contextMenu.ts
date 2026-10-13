@@ -1,7 +1,9 @@
 import { CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu } from "@tauri-apps/api/menu";
 import { usePrefs } from "../state/prefs";
+import { useNavigation } from "../state/navigation";
 import { useSelection } from "../state/selection";
 import { dispatchAction, type ActionId } from "./actions";
+import { clipboardHasFiles, copySelection, cutSelection, pasteInto } from "./clipboard";
 import { createItem } from "./fileOps";
 import { countRealSelected } from "./parentRow";
 import { getSelectedEntries } from "./selected";
@@ -52,11 +54,19 @@ export async function buildItemMenu(folder: string | null = null): Promise<Menu>
         separator(),
       ]
     : [];
+  const hasFiles = folder ? await clipboardHasFiles() : false;
+  const clipboardItems = [
+    run("Cut", () => void cutSelection()),
+    run("Copy", () => void copySelection()),
+    ...(folder ? [run("Paste", () => void pasteInto(folder), hasFiles)] : []),
+    separator(),
+  ];
   return toMenu(
     await Promise.all([
       action("Open", "file.open"),
       separator(),
       ...creation,
+      ...clipboardItems,
       action("Reveal in Finder", "file.reveal"),
       action("Copy Path", "file.copyPath"),
       action("Get Info", "file.getInfo"),
@@ -90,6 +100,7 @@ export async function buildBackgroundMenu(): Promise<Menu> {
       SORT_ITEMS.map(([key, label, id]) => check(label, sort.key === key, id)),
     ),
   });
+  const hasFiles = await clipboardHasFiles();
   return toMenu([
     viewMenu,
     await check("Show Hidden Files", showHidden, "view.toggleHidden"),
@@ -97,6 +108,15 @@ export async function buildBackgroundMenu(): Promise<Menu> {
     await separator(),
     await run("New Folder", () => void createItem("folder")),
     await run("New File", () => void createItem("file")),
+    await separator(),
+    await run(
+      "Paste",
+      () => {
+        const target = useNavigation.getState().currentPath;
+        if (target !== null) void pasteInto(target);
+      },
+      hasFiles,
+    ),
   ]);
 }
 

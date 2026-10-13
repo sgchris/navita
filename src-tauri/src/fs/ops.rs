@@ -188,25 +188,32 @@ pub fn rename_path(path: &str, new_name: &str, home: Option<&Path>) -> Result<St
 }
 
 /// `renamex_np(RENAME_EXCL)`: atomically refuses to replace an existing target.
-fn rename_exclusive(source: &Path, target: &Path) -> Result<(), AppError> {
-    let from = CString::new(source.as_os_str().as_bytes()).map_err(|_| AppError::InvalidPath {
-        path: source.to_string_lossy().into_owned(),
-    })?;
-    let to = CString::new(target.as_os_str().as_bytes()).map_err(|_| AppError::InvalidPath {
-        path: target.to_string_lossy().into_owned(),
-    })?;
+pub(crate) fn renamex_exclusive(source: &Path, target: &Path) -> std::io::Result<()> {
+    let to_c = |p: &Path| {
+        CString::new(p.as_os_str().as_bytes())
+            .map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))
+    };
+    let from = to_c(source)?;
+    let to = to_c(target)?;
     // SAFETY: both arguments are valid NUL-terminated strings that outlive the call.
     let rc = unsafe { libc::renamex_np(from.as_ptr(), to.as_ptr(), libc::RENAME_EXCL) };
     if rc == 0 {
-        return Ok(());
+        Ok(())
+    } else {
+        Err(std::io::Error::last_os_error())
     }
-    let error = std::io::Error::last_os_error();
-    if error.raw_os_error() == Some(libc::EEXIST) {
-        return Err(AppError::AlreadyExists {
-            path: target.to_string_lossy().into_owned(),
-        });
-    }
-    Err(AppError::from_io(&error, source))
+}
+
+fn rename_exclusive(source: &Path, target: &Path) -> Result<(), AppError> {
+    renamex_exclusive(source, target).map_err(|error| {
+        if error.raw_os_error() == Some(libc::EEXIST) {
+            AppError::AlreadyExists {
+                path: target.to_string_lossy().into_owned(),
+            }
+        } else {
+            AppError::from_io(&error, source)
+        }
+    })
 }
 
 /// Moves paths to the Trash. Abstracted so tests do not fill the user's real Trash.

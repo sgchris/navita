@@ -1,12 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { AppError } from "./bindings/AppError";
+import type { ClipboardFiles } from "./bindings/ClipboardFiles";
 import type { DirListing } from "./bindings/DirListing";
 import type { MenuState } from "./bindings/MenuState";
 import type { Place } from "./bindings/Place";
 import type { TreeNode } from "./bindings/TreeNode";
 import type { VolumeInfo } from "./bindings/VolumeInfo";
 
-export type { AppError, DirListing, MenuState, Place, TreeNode, VolumeInfo };
+export type { AppError, ClipboardFiles, DirListing, MenuState, Place, TreeNode, VolumeInfo };
 
 /** Normalizes whatever `invoke` rejected with into an `AppError`. */
 export function toAppError(error: unknown): AppError {
@@ -31,6 +32,10 @@ export const commands = {
   createFile: (parent: string) => invoke<string>("create_file", { parent }),
   renamePath: (path: string, newName: string) => invoke<string>("rename_path", { path, newName }),
   trashPaths: (paths: string[]) => invoke<void>("trash_paths", { paths }),
+  clipboardWriteFiles: (paths: string[]) => invoke<number>("clipboard_write_files", { paths }),
+  clipboardReadFiles: () => invoke<ClipboardFiles>("clipboard_read_files"),
+  pasteFiles: (sources: string[], destDir: string, moveItems: boolean) =>
+    invoke<string[]>("paste_files", { sources, destDir, moveItems }),
   watchDir: (path: string) => invoke<void>("watch_dir", { path }),
   setMenuState: (state: MenuState) => invoke<void>("set_menu_state", { state }),
 };
