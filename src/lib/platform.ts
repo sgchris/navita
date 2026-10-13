@@ -21,6 +21,11 @@ export function installNativeFeelGuards(): void {
   for (const name of ["gesturestart", "gesturechange", "gestureend"]) {
     window.addEventListener(name, (e) => e.preventDefault());
   }
+  // With native drag-and-drop disabled (tauri.conf.json), a file dropped on the window would
+  // otherwise navigate the webview to that file.
+  for (const name of ["dragover", "drop"]) {
+    window.addEventListener(name, (e) => e.preventDefault());
+  }
   window.addEventListener(
     "keydown",
     (e) => {

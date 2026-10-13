@@ -143,3 +143,21 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - Live refresh was verified end to end in `tauri dev` (file created/removed in the shown folder: `fs:changed` then a silent refresh, 85 -> 86 -> 85 entries within the 3 s check interval).
 - Preferences persist to `~/Library/Application Support/com.sgchris.navita/prefs.json` (`@tauri-apps/plugin-store`, one key per preference, only changed keys are written, debounced 300 ms, flushed on window blur). Verified in `tauri dev`: first launch wrote `lastPath` and `expandedTreePaths`; a second launch with edited values restored `viewMode`, `showHidden`, `sidebarWidth`, `sort` and `lastPath`. The test file was deleted afterwards.
 - Window frame persistence (window-state plugin) cannot be verified by the agent: a programmatic quit (`osascript ... quit`) does not terminate the dev binary, so `.window-state.json` is never written in agent runs. Verify manually (docs/QA.md, M5).
+
+### M6 native-feel audit (spec 8.6)
+
+| Rule                      | Implementation                                                                                                                                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 select none             | `base.css` (`user-select: none` on everything, `text` only for inputs)                                                                                                                         |
+| 2 default cursor          | `base.css` (`cursor: default`; `col-resize` on column dividers and the sidebar splitter, `text` in inputs)                                                                                     |
+| 3 no focus rings          | `base.css` (`outline: none`); keyboard focus shows through selection emphasis                                                                                                                  |
+| 4 no webview context menu | `contextmenu` listener (`lib/platform.ts`); native menus come from `lib/contextMenu.ts`                                                                                                        |
+| 5 no browser shortcuts    | keydown guard for ⌘+, ⌘-, ⌘0, ⌘F; ⌘R is the Reveal menu item; pinch via `gesture*` listeners and `touch-action: none`; `dragover`/`drop` guarded so a dropped file cannot navigate the webview |
+| 6 overflow                | `html, body { overflow: hidden; overscroll-behavior: none }`; only lists scroll                                                                                                                |
+| 7 no ghost drag           | `-webkit-user-drag: none` on `img, svg`                                                                                                                                                        |
+| 8 scrollbars              | untouched (overlay)                                                                                                                                                                            |
+| 9 inactive window         | `html.window-inactive` + `ui.windowActive` (selection and toolbar dim)                                                                                                                         |
+| 10 animations             | only the disclosure chevron (150 ms ease-out) and the spinner; global `prefers-reduced-motion` override                                                                                        |
+| 11 no white flash         | window created hidden, shown after two animation frames; `body` transparent                                                                                                                    |
+
+Canvas text measurement equals DOM measurement for the UI font (verified in `tauri dev` by `lib/devSelfCheck.ts`: 375.3 px vs 375.3 px at 13 px, 350.5 px vs 350.5 px at 12 px), so middle truncation matches real layout. Release-build behavior of the guards is a [USER] check (docs/QA.md, M6).

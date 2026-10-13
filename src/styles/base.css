@@ -59,6 +59,7 @@ button {
 
 /* 9: inactive window */
 html.window-inactive .toolbar__button,
+html.window-inactive .segmented__item,
 html.window-inactive .toolbar__title {
   color: var(--label-tertiary);
 }

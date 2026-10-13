@@ -52,3 +52,14 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] Mount a disk image (or plug in a USB drive): it appears under Locations within about a second; eject it: it disappears.
 - [ ] Empty folder with only hidden items shows "No visible items — N hidden items" with a **Show Hidden Files** button that reveals them.
 - [ ] Change the view mode, sort, hidden toggle, sidebar width, column widths, expand some tree folders, navigate to another folder, quit (⌘Q) and relaunch: the window frame, folder, view mode, sort, hidden toggle, sidebar width, column widths and expanded tree nodes are restored. A deleted last folder falls back to Home.
+
+## M6 — Native-feel pass (release build: `npm run tauri build`, run the `.app`)
+
+- [ ] Compare side by side with Finder (light and dark): typography, spacing, selection colors, sidebar material, icon tints; nothing looks "webby".
+- [ ] Inactive window: selection turns gray, toolbar icons dim.
+- [ ] Try ⌘+, ⌘-, ⌘0, ⌘F: nothing happens (no zoom, no find). Pinch on the trackpad: no zoom.
+- [ ] Right-click on empty areas (toolbar, sidebar, path bar): no web context menu appears; on the list background the native View/Sort menu appears.
+- [ ] Drag an item or icon: no ghost image; drag a file from Finder onto the window: nothing happens (the UI must not be replaced).
+- [ ] Try to select text by dragging or double-clicking labels: nothing gets selected.
+- [ ] Permission-denied folder (for example `~/Library/Mail` without Full Disk Access): the error state shows the lock icon, "Open Privacy Settings…" opens System Settings, "Go Back" returns.
+- [ ] Long names are middle-truncated (`report-final-…-v3.pdf`) in both views; hidden items are dimmed; symlinks show the arrow badge.
