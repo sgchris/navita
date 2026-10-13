@@ -112,3 +112,8 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] In a folder with pictures, Icons view shows the pictures themselves (not icons), same size as the icons, centered, never stretched (wide and tall images keep their ratio); List view shows 16 px thumbnails.
 - [ ] A phone photo that was taken in portrait mode appears upright; HEIC, TIFF, WebP, SVG and (if the system can decode them) camera RAW files show images.
 - [ ] A corrupt image or a `.png` that is really text keeps its icon; scrolling a folder with many large photos stays smooth; replacing an image file updates its thumbnail after the next refresh.
+
+### Terminal
+
+- [ ] Right-click a file, a folder and empty space: each menu has **Terminal**; it opens your default terminal (the app that opens `.command` files; Terminal.app if none) in the folder Navita is showing, even when you right-clicked a different folder. Every click opens a new instance.
+- [ ] If you use iTerm or Ghostty: set it for `.command` files (Finder ▸ Get Info on a `.command` file ▸ Open with ▸ Change All) and check that Navita now opens that one.

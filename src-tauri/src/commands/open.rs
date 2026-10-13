@@ -28,6 +28,12 @@ fn open_with_default_app(app: &AppHandle, path: &str) -> Result<(), AppError> {
         })
 }
 
+/// Opens the system's default terminal in `path`, always as a new instance.
+#[tauri::command]
+pub async fn open_terminal(path: String) -> Result<(), AppError> {
+    run_blocking(move || crate::terminal::open_terminal(&path)).await
+}
+
 /// Reveals each path in Finder (selecting it in its enclosing folder).
 #[tauri::command]
 pub async fn reveal_in_finder(app: AppHandle, paths: Vec<String>) -> Result<(), AppError> {

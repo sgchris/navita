@@ -16,6 +16,7 @@ export type ActionId =
   | "file.reveal"
   | "file.copyPath"
   | "file.getInfo"
+  | "file.openTerminal"
   | "file.newFolder"
   | "file.rename"
   | "file.trash"
@@ -107,6 +108,13 @@ export function dispatchAction(id: string): void {
     case "file.getInfo": {
       const paths = getSelectedEntries().map((e) => e.path);
       if (paths.length > 0) void guarded("Couldn’t show info", () => commands.getInfo(paths));
+      return;
+    }
+    case "file.openTerminal": {
+      // Always the folder Navita is showing, whichever item was right-clicked.
+      const folder = navigation.currentPath;
+      if (folder !== null)
+        void guarded("Couldn’t open Terminal", () => commands.openTerminal(folder));
       return;
     }
     case "file.newFolder":

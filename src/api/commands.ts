@@ -27,6 +27,7 @@ export const commands = {
   revealInFinder: (paths: string[]) => invoke<void>("reveal_in_finder", { paths }),
   getInfo: (paths: string[]) => invoke<void>("get_info", { paths }),
   copyText: (text: string) => invoke<void>("copy_text", { text }),
+  openTerminal: (path: string) => invoke<void>("open_terminal", { path }),
   openFullDiskAccessSettings: () => invoke<void>("open_full_disk_access_settings"),
   createFolder: (parent: string) => invoke<string>("create_folder", { parent }),
   createFile: (parent: string) => invoke<string>("create_file", { parent }),

@@ -5,6 +5,7 @@ pub mod fs;
 pub mod menu;
 pub mod model;
 pub mod places;
+pub mod terminal;
 pub mod thumbnails;
 pub mod watcher;
 
@@ -51,6 +52,7 @@ pub fn run() {
             commands::ops::rename_path,
             commands::ops::trash_paths,
             commands::open::open_path,
+            commands::open::open_terminal,
             commands::open::reveal_in_finder,
             commands::open::get_info,
             commands::open::copy_text,

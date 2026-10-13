@@ -70,6 +70,7 @@ export async function buildItemMenu(folder: string | null = null): Promise<Menu>
       action("Reveal in Finder", "file.reveal"),
       action("Copy Path", "file.copyPath"),
       action("Get Info", "file.getInfo"),
+      action("Terminal", "file.openTerminal"),
       separator(),
       action("Rename…", "file.rename", single),
       action("Move to Trash", "file.trash"),
@@ -117,6 +118,8 @@ export async function buildBackgroundMenu(): Promise<Menu> {
       },
       hasFiles,
     ),
+    await separator(),
+    await action("Terminal", "file.openTerminal"),
   ]);
 }
 
