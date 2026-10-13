@@ -1,3 +1,4 @@
+import { showBackgroundMenu } from "../lib/contextMenu";
 import { cx } from "../lib/cx";
 import { useVisibleEntries } from "../lib/viewModel";
 import { countHidden } from "../lib/visible";
@@ -38,6 +39,10 @@ export function ContentPane() {
     <div
       className={cx("content", emphasized && "pane--emphasized")}
       onPointerDown={() => setFocusedPane("content")}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        void showBackgroundMenu();
+      }}
     >
       {body}
     </div>

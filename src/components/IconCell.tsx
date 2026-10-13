@@ -3,6 +3,7 @@ import type { Entry } from "../api/bindings/Entry";
 import { cx } from "../lib/cx";
 import { CELL_SIZE } from "../lib/grid";
 import { truncateName } from "../lib/measure";
+import { showItemMenu } from "../lib/contextMenu";
 import { openSelected } from "../lib/open";
 import { useSelection } from "../state/selection";
 import { FileIcon } from "./FileIcon";
@@ -35,6 +36,11 @@ export const IconCell = memo(function IconCell({ entry, selected }: Props) {
       title={entry.name}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        void showItemMenu(entry.path);
+      }}
     >
       <div className="icon-cell__icon">
         <FileIcon entry={entry} variant="grid" />

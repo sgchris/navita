@@ -4,6 +4,7 @@ import { cx } from "../lib/cx";
 import { fileTypeOf } from "../lib/fileTypes";
 import { formatDate, formatSize } from "../lib/format";
 import { truncateName } from "../lib/measure";
+import { showItemMenu } from "../lib/contextMenu";
 import { openSelected } from "../lib/open";
 import { useSelection } from "../state/selection";
 import { FileIcon } from "./FileIcon";
@@ -39,6 +40,11 @@ export const FileRow = memo(function FileRow({ entry, selected, nameBudget, now,
       style={{ transform: `translateY(${top}px)` }}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        void showItemMenu(entry.path);
+      }}
     >
       <div className="file-row__inner">
         <div className="file-row__name">

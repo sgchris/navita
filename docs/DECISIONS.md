@@ -135,3 +135,5 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - The menu items `file.newFolder`, `file.rename`, `file.trash` exist but stay disabled until M8; `dispatchAction` ignores them until then.
 - Sidebar keyboard focus is tracked by row key (`ui.sidebarFocusKey`), not by the current path, because the same folder can appear in several sections (for example "Macintosh HD" in Locations and as the tree root); navigating by "next row after the row whose path is current" would loop.
 - Dev log: menu events are logged as `[navita] menu <id>` in `tauri dev` for manual accelerator testing (`NAVITA_DEV_LOG=<file> npm run tauri dev`).
+- Context menus are built with `@tauri-apps/api/menu` (`lib/contextMenu.ts`); `core:menu:default` already contains `allow-new`, `allow-popup` and the item permissions. A dev-only self-check (`lib/devSelfCheck.ts`) builds both menus at boot and logs `[navita] selfcheck context menus ok`, because the agent cannot right-click.
+- `lib/features.ts` exports `FILE_OPS_ENABLED` (false until M8) which gates Rename… and Move to Trash in the item menu.

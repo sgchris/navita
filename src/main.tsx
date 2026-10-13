@@ -4,6 +4,7 @@ import App from "./App";
 import { events } from "./api/events";
 import { commands } from "./api/commands";
 import { installDevLog } from "./lib/devLog";
+import { runDevSelfCheck } from "./lib/devSelfCheck";
 import { dispatchAction } from "./lib/actions";
 import { installKeyboard } from "./lib/keyboard";
 import { installMenuSync, syncMenu } from "./lib/menuSync";
@@ -53,6 +54,7 @@ async function boot(): Promise<void> {
     </React.StrictMode>,
   );
   showWindowAfterPaint();
+  void runDevSelfCheck();
   await useNavigation.getState().init(null);
   await useTree.getState().init({
     homePath: home,
