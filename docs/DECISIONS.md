@@ -110,3 +110,9 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 ### S2, S3, S4: not verifiable by the agent
 
 `screencapture` fails in the agent's session ("could not create image from display"), so visual checks are left to the user (see docs/QA.md, M0): no white flash on launch, window frame restored after relaunch (S2); traffic lights vertically centered in the 52 px toolbar (S3, currently the spec value `trafficLightPosition: {x: 20, y: 24}`, adjust in steps of 2 px if off-center); double-click on the toolbar zooms the window (S4). If any of these fails, ask the user (see plan section 6).
+
+### M2 refinements
+
+- **B24 (refined):** directories and symlinks to directories are always the Folder category (their extension is ignored, so a folder named `data.json` is a folder); the extension category applies to files, packages and symlinks to files.
+- `middleTruncate(text, maxWidth, measure)` takes no `tailBias` argument: for `k` kept characters the head gets `ceil(k/2)` and the tail `floor(k/2)`.
+- `lib/selectionReducer.ts` also exports `listTarget`; arrow targets for the Icons view are in `lib/grid.ts`.
