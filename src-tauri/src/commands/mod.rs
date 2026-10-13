@@ -2,6 +2,7 @@ pub mod fs;
 pub mod menu;
 pub mod open;
 pub mod places;
+pub mod watch;
 
 use crate::error::AppError;
 

@@ -7,6 +7,7 @@ import {
   listTarget,
   moveFocus,
   prune,
+  reconcileSelection,
   selectAll,
   selectOnly,
 } from "./selectionReducer";
@@ -115,5 +116,35 @@ describe("listTarget", () => {
     expect(listTarget(4, 5, "down")).toBe(4);
     expect(listTarget(0, 5, "up")).toBe(0);
     expect(listTarget(null, 0, "down")).toBeNull();
+  });
+});
+
+describe("reconcileSelection", () => {
+  const before = ["/a", "/b", "/c", "/d"];
+
+  it("leaves an empty selection alone", () => {
+    expect(reconcileSelection(EMPTY_SELECTION, before, ["/a"])).toBe(EMPTY_SELECTION);
+  });
+
+  it("keeps selected paths that still exist", () => {
+    const state = click(selectOnly("/b"), before, "/c", { meta: true, shift: false });
+    const next = reconcileSelection(state, before, ["/a", "/c", "/d"]);
+    expect(sel(next)).toEqual(["/c"]);
+  });
+
+  it("selects the item now at the former index when everything selected vanished", () => {
+    const next = reconcileSelection(selectOnly("/b"), before, ["/a", "/c", "/d"]);
+    expect(sel(next)).toEqual(["/c"]);
+    expect(next.focus).toBe("/c");
+  });
+
+  it("uses the smallest former index for multi-selections and clamps to the last item", () => {
+    const state = click(selectOnly("/c"), before, "/d", { meta: true, shift: false });
+    const next = reconcileSelection(state, before, ["/a", "/b"]);
+    expect(sel(next)).toEqual(["/b"]);
+  });
+
+  it("clears the selection when the list became empty", () => {
+    expect(reconcileSelection(selectOnly("/a"), before, []).selected.size).toBe(0);
   });
 });

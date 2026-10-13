@@ -107,3 +107,23 @@ export function listTarget(
   if (focusIndex === null) return key === "down" ? 0 : count - 1;
   return key === "down" ? Math.min(focusIndex + 1, count - 1) : Math.max(focusIndex - 1, 0);
 }
+
+/**
+ * Selection after the visible list changed through a live refresh (decisions B7): keep selected
+ * paths that still exist; if all of them vanished select the item now at the smallest former
+ * index (clamped to the last item); an empty list clears the selection.
+ */
+export function reconcileSelection(
+  state: SelectionState,
+  oldPaths: readonly string[],
+  newPaths: readonly string[],
+): SelectionState {
+  if (state.selected.size === 0) return state;
+  const pruned = prune(state, newPaths);
+  if (pruned.selected.size > 0) return pruned;
+
+  const formerIndexes = oldPaths.flatMap((p, i) => (state.selected.has(p) ? [i] : []));
+  const former = formerIndexes.length > 0 ? Math.min(...formerIndexes) : 0;
+  const target = newPaths[Math.min(former, newPaths.length - 1)];
+  return target === undefined ? EMPTY_SELECTION : selectOnly(target);
+}

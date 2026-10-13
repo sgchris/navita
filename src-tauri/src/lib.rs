@@ -4,6 +4,7 @@ pub mod fs;
 pub mod menu;
 pub mod model;
 pub mod places;
+pub mod watcher;
 
 use tauri::Manager;
 use tauri_plugin_window_state::StateFlags;
@@ -22,6 +23,8 @@ pub fn run() {
             let (menu, handles) = menu::build(app.handle())?;
             app.set_menu(menu)?;
             app.manage(handles);
+            app.manage(watcher::Watchers::default());
+            watcher::start_volumes_watcher(app.handle());
             Ok(())
         })
         .on_menu_event(|app, event| menu::handle_event(app, event.id().as_ref()))
@@ -37,6 +40,7 @@ pub fn run() {
             commands::open::open_full_disk_access_settings,
             commands::places::places,
             commands::places::volume_info,
+            commands::watch::watch_dir,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

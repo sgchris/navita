@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { AppError, DirListing } from "../api/commands";
+import { commands, type AppError, type DirListing } from "../api/commands";
 import {
   EMPTY_HISTORY,
   canGoBack,
@@ -15,7 +15,8 @@ import {
   type HistoryEntry,
 } from "../lib/history";
 import { basename, parentOf } from "../lib/paths";
-import { selectOnly } from "../lib/selectionReducer";
+import { reconcileSelection, selectOnly } from "../lib/selectionReducer";
+import { getVisiblePaths } from "../lib/viewModel";
 import { useListing } from "./listing";
 import { usePrefs } from "./prefs";
 import { useSelection } from "./selection";
@@ -36,6 +37,8 @@ interface NavigationState {
   /** Starts at `startPath`, falling back to Home on any failure (decisions B3). */
   init: (startPath: string | null) => Promise<void>;
   navigate: (path: string, options?: NavigateOptions) => Promise<void>;
+  /** Silent reload of the current folder after a filesystem change (decisions B5, B7). */
+  refresh: () => Promise<void>;
   back: () => Promise<void>;
   forward: () => Promise<void>;
   up: () => Promise<void>;
@@ -73,6 +76,7 @@ export const useNavigation = create<NavigationState>()((set, get) => {
           : push(s.history, newEntry(listing.path, usePrefs.getState().viewMode)),
     }));
     void useTree.getState().revealPath(listing.path);
+    void commands.watchDir(listing.path).catch(() => undefined);
 
     const selection = useSelection.getState();
     if (mode.kind === "restore") {
@@ -169,6 +173,30 @@ export const useNavigation = create<NavigationState>()((set, get) => {
         return;
       }
       await failWith(path, result.error);
+    },
+
+    refresh: async () => {
+      const path = get().currentPath;
+      if (path === null) return;
+      const result = await useListing.getState().fetch(path, { silent: true });
+      if (result.kind === "stale") return;
+      if (result.kind === "error") {
+        await failWith(path, result.error);
+        return;
+      }
+      const selection = useSelection.getState();
+      const oldPaths = getVisiblePaths();
+      useListing.getState().commit(result.listing);
+      selection.set(
+        reconcileSelection(
+          { selected: selection.selected, anchor: selection.anchor, focus: selection.focus },
+          oldPaths,
+          getVisiblePaths(),
+        ),
+      );
+      if (import.meta.env.DEV) {
+        console.info(`[navita] refreshed ${path} entries=${result.listing.entries.length}`);
+      }
     },
 
     back: async () => {

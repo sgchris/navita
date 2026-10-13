@@ -27,5 +27,6 @@ export const commands = {
   getInfo: (paths: string[]) => invoke<void>("get_info", { paths }),
   copyText: (text: string) => invoke<void>("copy_text", { text }),
   openFullDiskAccessSettings: () => invoke<void>("open_full_disk_access_settings"),
+  watchDir: (path: string) => invoke<void>("watch_dir", { path }),
   setMenuState: (state: MenuState) => invoke<void>("set_menu_state", { state }),
 };

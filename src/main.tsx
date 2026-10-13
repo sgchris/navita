@@ -7,6 +7,7 @@ import { installDevLog } from "./lib/devLog";
 import { runDevSelfCheck } from "./lib/devSelfCheck";
 import { dispatchAction } from "./lib/actions";
 import { installKeyboard } from "./lib/keyboard";
+import { installLiveRefresh } from "./lib/liveRefresh";
 import { installMenuSync, syncMenu } from "./lib/menuSync";
 import {
   initWindowActiveClass,
@@ -36,6 +37,7 @@ async function boot(): Promise<void> {
   installKeyboard();
   installWindowTitle();
   installMenuSync();
+  void installLiveRefresh();
   void events.onMenu((id) => {
     if (import.meta.env.DEV) console.info(`[navita] menu ${id}`);
     dispatchAction(id);
