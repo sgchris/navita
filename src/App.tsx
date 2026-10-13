@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
 import { ContentPane } from "./components/ContentPane";
+import { Sidebar } from "./components/Sidebar";
+import { Splitter } from "./components/Splitter";
 import { Toolbar } from "./components/Toolbar";
 import { cx } from "./lib/cx";
 import { usePrefs } from "./state/prefs";
@@ -14,7 +16,8 @@ export default function App() {
     >
       <div className="sidebar-col">
         <div className="sidebar-col__drag" data-tauri-drag-region />
-        <div className="sidebar" />
+        <Sidebar />
+        {sidebarVisible && <Splitter />}
       </div>
       <div className="content-col">
         <Toolbar />

@@ -120,3 +120,9 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - `listing.fetch` never commits state: navigation commits listing, `currentPath` and selection in the same tick (`commitSuccess`), so the UI never shows a new path with the old listing.
 - **Dev log forwarder (agent smoke runs):** in `tauri dev`, `src/lib/devLog.ts` forwards `window.onerror`, unhandled rejections and `console.error/warn/info` to the Vite dev server (`/__devlog`), which appends them to the file named by `NAVITA_DEV_LOG` (discarded when unset). This is how plan section 5.2 detects `Uncaught` errors, because the Tauri dev terminal does not show the webview console. The code is inactive in production builds (`import.meta.env.DEV`).
 - `eslint` rule `react-hooks/incompatible-library` is off: it flags `@tanstack/react-virtual`'s `useVirtualizer`, which is used as documented.
+
+### M3 refinements
+
+- Sidebar components: because the whole sidebar is one flattened virtual list (B12), `SidebarSection.tsx`, `FolderTree.tsx` and `TreeRow.tsx` from the spec's file tree are replaced by `Sidebar.tsx` (list) and `SidebarRowView.tsx` (header, place, node and message rows). `lib/treeFlatten.ts` produces the rows.
+- Sidebar selection uses the same emphasized (accent) / unemphasized (gray) colors as the content pane (B16); place icons are accent-tinted, folder icons use `--icon-folder`.
+- Temporary frontend `⌘⌥S` (sidebar toggle) lives in `lib/keyboard.ts` until M4 adds the menu accelerator.

@@ -1,0 +1,125 @@
+.splitter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 6px;
+  z-index: 5;
+  cursor: col-resize;
+}
+
+.sidebar__list {
+  position: absolute;
+  inset: 0;
+  top: calc(var(--toolbar-height) - var(--sidebar-inset));
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.sidebar__body {
+  position: relative;
+}
+
+.sidebar-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sidebar-row-height);
+  padding: 0 8px;
+  font-size: 13px;
+}
+
+.sidebar-row__inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 8px;
+  border-radius: 8px;
+}
+
+.sidebar-row__inner--node,
+.sidebar-row--message .sidebar-row__inner {
+  padding-left: calc(8px + var(--depth, 0) * var(--tree-indent));
+  gap: 4px;
+}
+
+.sidebar-row__label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar-row__icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.sidebar-row__icon--place {
+  color: var(--accent);
+}
+
+.sidebar-row__icon--folder {
+  color: var(--icon-folder);
+}
+
+.sidebar-row__icon--disk {
+  color: var(--icon-disk);
+}
+
+.sidebar-row__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--label-secondary);
+}
+
+.sidebar-row__chevron {
+  transition: transform 150ms ease-out;
+}
+
+.sidebar-row__chevron--open {
+  transform: rotate(90deg);
+}
+
+.sidebar-row--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--label-secondary);
+}
+
+.sidebar-row__header-toggle {
+  opacity: 0;
+  font-weight: 500;
+}
+
+.sidebar-row--header:hover .sidebar-row__header-toggle {
+  opacity: 1;
+}
+
+.sidebar-row--message {
+  color: var(--label-tertiary);
+}
+
+.sidebar-row--selected .sidebar-row__inner {
+  background: var(--selection-bg-unemphasized);
+}
+
+.sidebar--emphasized .sidebar-row--selected .sidebar-row__inner {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+.sidebar--emphasized .sidebar-row--selected .sidebar-row__icon,
+.sidebar--emphasized .sidebar-row--selected .sidebar-row__arrow {
+  color: var(--selection-text);
+}

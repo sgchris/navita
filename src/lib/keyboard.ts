@@ -76,6 +76,13 @@ function handleContentKey(e: KeyboardEvent): void {
 
 function onKeyDown(e: KeyboardEvent): void {
   if (e.defaultPrevented || isTextInput(e.target)) return;
+  // TEMPORARY until M4 replaces it with the native menu accelerator (decisions B39).
+  if (e.metaKey && e.altKey && e.code === "KeyS") {
+    e.preventDefault();
+    const prefs = usePrefs.getState();
+    prefs.setSidebarVisible(!prefs.sidebarVisible);
+    return;
+  }
   const ui = useUi.getState();
   if (ui.renamingPath !== null) return;
   if (ui.focusedPane === "content") handleContentKey(e);

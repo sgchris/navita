@@ -21,3 +21,13 @@ Items the agent cannot verify (visual / interactive). Run before closing each mi
 - [ ] Icons view: ←/→ move by one cell, ↑/↓ by one row; long names are middle-truncated on two lines.
 - [ ] A folder with 10,000 files (create one with `mkdir big && cd big && for i in $(seq 1 10000); do : > f$i.txt; done`) scrolls smoothly in both views.
 - [ ] Symlinks show a small arrow badge; a broken symlink is dimmed and its Kind is "Broken alias".
+
+## M3 — Sidebar
+
+- [ ] The sidebar shows Favorites (Home, Desktop, Documents, Downloads, Applications), Locations (Macintosh HD plus mounted volumes) and a Folders tree rooted at `/` with Home expanded.
+- [ ] Clicking any row navigates; clicking the arrow only expands/collapses; the tree always highlights (and scrolls to) the current folder, also when navigating from the list.
+- [ ] Hovering a section header shows Hide/Show; clicking collapses/expands that section.
+- [ ] Dragging the sidebar's right edge resizes it between 180 and 400 px.
+- [ ] `⌘⌥S` hides and shows the sidebar (toolbar padding grows so it clears the traffic lights).
+- [ ] A folder containing only `.git` shows no arrow while hidden files are off, and an arrow when they are on; hidden folders in the tree appear/disappear with the eye toggle (except ancestors of the current folder).
+- [ ] An unreadable folder shows "Can’t open folder" when expanded.

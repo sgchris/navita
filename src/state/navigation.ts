@@ -3,6 +3,7 @@ import type { DirListing } from "../api/commands";
 import { basename, parentOf } from "../lib/paths";
 import { useListing } from "./listing";
 import { useSelection } from "./selection";
+import { useTree } from "./tree";
 import { useUi } from "./ui";
 
 export interface NavigateOptions {
@@ -74,6 +75,7 @@ function commitSuccess(
 ): void {
   useListing.getState().commit(listing);
   useNavigation.setState({ currentPath: path });
+  void useTree.getState().revealPath(path);
   const selection = useSelection.getState();
   if (options?.selectChild) selection.selectOnly(options.selectChild);
   else selection.clear();
