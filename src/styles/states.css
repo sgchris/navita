@@ -41,3 +41,13 @@
     transform: rotate(360deg);
   }
 }
+
+.state__button--primary {
+  background: var(--accent);
+  color: var(--selection-text);
+}
+
+.state__button--primary:hover {
+  background: var(--accent);
+  filter: brightness(1.1);
+}

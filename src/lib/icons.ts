@@ -23,6 +23,7 @@ export {
   House,
   LayoutGrid,
   List,
+  Lock,
   Monitor,
   Package,
   Presentation,
