@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo/navita-icon-1024.png" alt="Navita logo" width="128"></p>
+
 # Navita
 
 A minimal, fast, native-feeling file browser for macOS, built with Rust and Tauri v2 (React + TypeScript frontend).

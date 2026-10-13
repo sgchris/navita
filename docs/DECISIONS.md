@@ -4,14 +4,14 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 
 ## 1.1 User decisions
 
-| #   | Decision                                                                                                                                                                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| U1  | Bundle id `com.sgchris.navita`; tree rooted at `/` with Home auto-expanded; keep Get Info (AppleScript, Automation prompt OK); Lucide icons; logo pending (default Tauri icon). |
-| U2  | Views: **Icons (default)** and **List with details**; toolbar segmented switch, View menu, `⌘1`/`⌘2`.                                                                           |
-| U3  | **Show hidden files: default off**; toolbar toggle, View menu, `⌘⇧.`; hides dot-prefixed files/folders **and** `UF_HIDDEN` items; applies to both views and the tree.           |
-| U4  | **Git:** `git init` + one local commit per step. No pushes.                                                                                                                     |
-| U5  | **Help menu → "Navita on GitHub"** opens `https://github.com/sgchris/navita` (repo is created later by the user). Keep URL in one constant `GITHUB_URL` in `menu.rs`.           |
-| U6  | **Scope: M0–M8** (includes New Folder, Rename, Move to Trash). Excluded: Developer ID signing/notarization, GitHub Actions workflow.                                            |
+| #   | Decision                                                                                                                                                                                                                          |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| U1  | Bundle id `com.sgchris.navita`; tree rooted at `/` with Home auto-expanded; keep Get Info (AppleScript, Automation prompt OK); Lucide icons; ~~logo pending~~ the logo in `assets/logo` is now the app icon (follow-up batch S1). |
+| U2  | Views: **Icons (default)** and **List with details**; toolbar segmented switch, View menu, `⌘1`/`⌘2`.                                                                                                                             |
+| U3  | **Show hidden files: default off**; toolbar toggle, View menu, `⌘⇧.`; hides dot-prefixed files/folders **and** `UF_HIDDEN` items; applies to both views and the tree.                                                             |
+| U4  | **Git:** `git init` + one local commit per step. No pushes.                                                                                                                                                                       |
+| U5  | **Help menu → "Navita on GitHub"** opens `https://github.com/sgchris/navita` (repo is created later by the user). Keep URL in one constant `GITHUB_URL` in `menu.rs`.                                                             |
+| U6  | **Scope: M0–M8** (includes New Folder, Rename, Move to Trash). Excluded: Developer ID signing/notarization, GitHub Actions workflow.                                                                                              |
 
 ## 1.2 Amendments to the spec
 
@@ -195,3 +195,10 @@ Measured on the development machine (Apple Silicon, macOS 26.6.2, window focused
 - **Rename editor:** Return commits; Esc cancels; blur commits a valid changed name, but blur with an **invalid** name reverts instead of keeping the editor open (so the editor never fights the user for focus); Return with an invalid name keeps editing with a red outline and the reason as tooltip. `Return` outside an editor starts renaming the single selected item; `file.newFolder`, `file.rename` (menu item without accelerator), `file.trash` (`⌘⌫`) are live; while an editor is open only `edit.selectAll` (selects the text) is honoured.
 - A rename to a name that becomes hidden (leading dot) while hidden files are off removes the item from view and clears the selection.
 - **Verified in the real app** (temporary harness, removed afterwards): Return on `report.pdf` opens the editor focused with `report` selected (range 0-6, extension not preselected); New Folder creates `untitled folder`, selects it and opens the editor with the whole name selected and focused; renaming to `Docs` updates the list and moves the selection; a clash returns "A file named “Docs” already exists." and keeps editing; moving the middle of three files to the Trash selects the next item; trashing the rest empties the list. Three empty `trash-*.tmp` files and one `navita-test-*-trash.tmp` file from these checks are in the user's Trash.
+
+## Follow-up batch
+
+### S1 logo
+
+- The logo (`assets/logo/navita-icon-1024.png`, `navita-icon.svg`) is the app icon: `npx tauri icon` regenerated `src-tauri/icons`; only the files referenced by `bundle.icon` plus `icon.png` are kept (`32x32.png`, `128x128.png`, `128x128@2x.png`, `icon.icns`, `icon.png`); the generated Android/iOS/Windows files were deleted. The artwork is already a macOS rounded square with padding, so no masking is applied.
+- Verified: the built `Navita.app` contains `icon.icns` with every size from 16 px to 1024 px (alpha preserved) showing the new logo. macOS may keep showing the old icon in the Dock/Finder until the app is moved or relaunched (icon cache).

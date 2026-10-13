@@ -72,3 +72,9 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] ⌘⌫ (File ▸ Move to Trash) moves the selection to the Trash (check in Finder) and selects the next item; the Trash item can be restored by dragging it out.
 - [ ] `~/Documents`, `~/Desktop`, `~/Downloads`, `~/Library`, the home folder and top-level folders such as `/Users` refuse Rename and Move to Trash with a status-bar message.
 - [ ] Changes made in Terminal while the editor is closed still refresh the list; the context menu on an item shows Rename… (only for a single selection) and Move to Trash enabled.
+
+## Follow-up batch
+
+### S1 — Logo
+
+- [ ] The built app shows the new Navita logo in the Dock, in Finder (`Navita.app`), in ⌘Tab and in the `.dmg` (if the old icon still shows, move the app or run `killall Dock`).
