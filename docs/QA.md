@@ -106,3 +106,9 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] Copy in Navita → switch to Finder → ⌘V pastes the files there; copy files in Finder (⌘C) → Paste in Navita copies them.
 - [ ] Cut in Navita → Paste in Navita moves the items (they leave the old folder); Cut in Navita → ⌘V in Finder copies them (documented limitation).
 - [ ] Pasting an item into the folder it is already in creates `name copy.ext`; pasting where the name exists never overwrites; a folder cannot be pasted into itself (status message).
+
+### S7 — Image thumbnails
+
+- [ ] In a folder with pictures, Icons view shows the pictures themselves (not icons), same size as the icons, centered, never stretched (wide and tall images keep their ratio); List view shows 16 px thumbnails.
+- [ ] A phone photo that was taken in portrait mode appears upright; HEIC, TIFF, WebP, SVG and (if the system can decode them) camera RAW files show images.
+- [ ] A corrupt image or a `.png` that is really text keeps its icon; scrolling a folder with many large photos stays smooth; replacing an image file updates its thumbnail after the next refresh.

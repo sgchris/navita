@@ -5,6 +5,7 @@ pub mod fs;
 pub mod menu;
 pub mod model;
 pub mod places;
+pub mod thumbnails;
 pub mod watcher;
 
 use tauri::Manager;
@@ -28,6 +29,13 @@ pub fn run() {
             app.manage(watcher::Watchers::default());
             watcher::start_volumes_watcher(app.handle());
             Ok(())
+        })
+        .register_asynchronous_uri_scheme_protocol("thumb", |_context, request, responder| {
+            let uri = request.uri().to_string();
+            tauri::async_runtime::spawn_blocking(move || {
+                let response = thumbnails::respond(&uri);
+                responder.respond(response);
+            });
         })
         .on_menu_event(|app, event| menu::handle_event(app, event.id().as_ref()))
         .invoke_handler(tauri::generate_handler![
