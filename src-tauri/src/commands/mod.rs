@@ -1,4 +1,5 @@
 pub mod fs;
+pub mod open;
 pub mod places;
 
 use crate::error::AppError;

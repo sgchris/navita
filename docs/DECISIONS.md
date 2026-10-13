@@ -116,3 +116,5 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - **B24 (refined):** directories and symlinks to directories are always the Folder category (their extension is ignored, so a folder named `data.json` is a folder); the extension category applies to files, packages and symlinks to files.
 - `middleTruncate(text, maxWidth, measure)` takes no `tailBias` argument: for `k` kept characters the head gets `ceil(k/2)` and the tail `floor(k/2)`.
 - `lib/selectionReducer.ts` also exports `listTarget`; arrow targets for the Icons view are in `lib/grid.ts`.
+- `open_path` moved from M4.4 to M2.2 (M2's acceptance requires opening files). `reveal_in_finder`, `get_info`, `copy_text` and `open_full_disk_access_settings` stay in M4.4.
+- `listing.fetch` never commits state: navigation commits listing, `currentPath` and selection in the same tick (`commitSuccess`), so the UI never shows a new path with the old listing.

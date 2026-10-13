@@ -20,6 +20,7 @@ pub fn run() {
             commands::fs::list_dir,
             commands::fs::list_subdirs,
             commands::fs::home_dir,
+            commands::open::open_path,
             commands::places::places,
             commands::places::volume_info,
         ])
