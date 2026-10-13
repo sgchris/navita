@@ -62,6 +62,11 @@ function handleContentKey(e: KeyboardEvent): void {
   }
   if (e.key === "Enter") {
     e.preventDefault();
+    void openSelected();
+    return;
+  }
+  if (e.key === "F2") {
+    e.preventDefault();
     startRename();
     return;
   }

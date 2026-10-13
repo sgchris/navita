@@ -202,3 +202,8 @@ Measured on the development machine (Apple Silicon, macOS 26.6.2, window focused
 
 - The logo (`assets/logo/navita-icon-1024.png`, `navita-icon.svg`) is the app icon: `npx tauri icon` regenerated `src-tauri/icons`; only the files referenced by `bundle.icon` plus `icon.png` are kept (`32x32.png`, `128x128.png`, `128x128@2x.png`, `icon.icns`, `icon.png`); the generated Android/iOS/Windows files were deleted. The artwork is already a macOS rounded square with padding, so no masking is applied.
 - Verified: the built `Navita.app` contains `icon.icns` with every size from 16 px to 1024 px (alpha preserved) showing the new logo. macOS may keep showing the old icon in the Dock/Finder until the app is moved or relaunched (icon cache).
+
+### S2 Enter and F2
+
+- **Enter opens the selection** (same as ⌘↓): a single folder or symlink to a folder is entered, every other selected item is opened with its default app (packages such as `.app` launch), folders inside a multi-selection are skipped. This supersedes spec section 9.2 ("Return reserved for rename") and the earlier M8 behavior where Return started renaming.
+- **F2 renames** the single selected item (any kind). It is handled in `lib/keyboard.ts` (content pane only, ignored while an editor is open) rather than as a menu accelerator, because menu accelerators are still unverified (spike S5); `File ▸ Rename` and the context menu keep working without a shortcut hint.

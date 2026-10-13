@@ -67,7 +67,7 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 ## M8 — File operations
 
 - [ ] ⇧⌘N (File ▸ New Folder) creates "untitled folder" (then "untitled folder 2", …), selects it and opens the name editor with the whole name selected; type a name and press Return.
-- [ ] Select one item and press Return (or File ▸ Rename): the editor opens with the extension not selected (`report.pdf` → `report` selected); Esc cancels; clicking elsewhere commits; an empty or unchanged name cancels.
+- [ ] Select one item and press F2 (or File ▸ Rename): the editor opens with the extension not selected (`report.pdf` → `report` selected); Esc cancels; clicking elsewhere commits; an empty or unchanged name cancels.
 - [ ] Typing `/` or `:` shows a red outline with the reason on Return; a name that already exists shows "A file named “…” already exists."; a case-only rename (`a.txt` → `A.txt`) works.
 - [ ] ⌘⌫ (File ▸ Move to Trash) moves the selection to the Trash (check in Finder) and selects the next item; the Trash item can be restored by dragging it out.
 - [ ] `~/Documents`, `~/Desktop`, `~/Downloads`, `~/Library`, the home folder and top-level folders such as `/Users` refuse Rename and Move to Trash with a status-bar message.
@@ -78,3 +78,8 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 ### S1 — Logo
 
 - [ ] The built app shows the new Navita logo in the Dock, in Finder (`Navita.app`), in ⌘Tab and in the `.dmg` (if the old icon still shows, move the app or run `killall Dock`).
+
+### S2 — Enter opens, F2 renames
+
+- [ ] Enter on a selected folder enters it; Enter on a file opens it with its default app; Enter on an `.app` launches it; Enter with several items selected opens each file (folders are skipped); Enter with nothing selected does nothing.
+- [ ] F2 on any single selected item (folder, file, app) opens the name editor with the extension not selected; F2 with no or several items selected does nothing; Enter inside the editor still commits the new name.
