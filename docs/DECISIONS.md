@@ -161,3 +161,7 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 | 11 no white flash         | window created hidden, shown after two animation frames; `body` transparent                                                                                                                    |
 
 Canvas text measurement equals DOM measurement for the UI font (verified in `tauri dev` by `lib/devSelfCheck.ts`: 375.3 px vs 375.3 px at 13 px, 350.5 px vs 350.5 px at 12 px), so middle truncation matches real layout. Release-build behavior of the guards is a [USER] check (docs/QA.md, M6).
+
+### Window must not wait for animation frames (bug found during M6.3)
+
+The window is created hidden (A14). The first version showed it after two `requestAnimationFrame`s, but WebKit does not run animation frames for a hidden window, so the window **never appeared** (CoreGraphics reported the 1100×700 window as `onscreen: false`; `document.visibilityState` stayed `hidden`). Fix (`lib/platform.ts: showWindowOnce`): the window is shown and focused right after the first listing has been committed (plus 30 ms for React to commit), with a 1.5 s safety timer in case the listing is slow or fails. `core:window:allow-set-focus` was added to the capabilities. Verified: CoreGraphics reports the window `onscreen: 1` and `visibilityState` becomes `visible`.

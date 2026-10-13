@@ -13,7 +13,7 @@ import {
   initWindowActiveClass,
   installNativeFeelGuards,
   installWindowTitle,
-  showWindowAfterPaint,
+  showWindowOnce,
 } from "./lib/platform";
 import { useListing } from "./state/listing";
 import { useNavigation } from "./state/navigation";
@@ -57,9 +57,12 @@ async function boot(): Promise<void> {
       <App />
     </React.StrictMode>,
   );
-  showWindowAfterPaint();
+  // Safety net: the window appears even if the first listing is slow or fails.
+  setTimeout(showWindowOnce, 1500);
   void runDevSelfCheck();
   await useNavigation.getState().init(usePrefs.getState().lastPath);
+  await new Promise((resolve) => setTimeout(resolve, 30)); // let React commit the first listing
+  showWindowOnce();
   await useTree.getState().init({
     homePath: home,
     currentPath: useNavigation.getState().currentPath,

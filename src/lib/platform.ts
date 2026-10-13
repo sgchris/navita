@@ -39,13 +39,19 @@ export function installNativeFeelGuards(): void {
   );
 }
 
-/** Shows the window after the first paint (the window is created hidden, see DECISIONS A14). */
-export function showWindowAfterPaint(): void {
-  requestAnimationFrame(() =>
-    requestAnimationFrame(() => {
-      void getCurrentWindow().show();
-    }),
-  );
+let windowShown = false;
+
+/**
+ * Shows and focuses the main window (it is created hidden, decisions A14). Idempotent.
+ *
+ * `requestAnimationFrame` must not be used to wait for a paint here: WebKit does not run animation
+ * frames for a hidden window, so the window would never appear.
+ */
+export function showWindowOnce(): void {
+  if (windowShown) return;
+  windowShown = true;
+  const win = getCurrentWindow();
+  void win.show().then(() => win.setFocus());
 }
 
 /** Keeps the (hidden) window title equal to the folder name for Mission Control and VoiceOver. */
