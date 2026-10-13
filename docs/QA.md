@@ -83,3 +83,7 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 
 - [ ] Enter on a selected folder enters it; Enter on a file opens it with its default app; Enter on an `.app` launches it; Enter with several items selected opens each file (folders are skipped); Enter with nothing selected does nothing.
 - [ ] F2 on any single selected item (folder, file, app) opens the name editor with the extension not selected; F2 with no or several items selected does nothing; Enter inside the editor still commits the new name.
+
+### S3 — Trash confirmation
+
+- [ ] ⌘⌫, File ▸ Move to Trash and the context menu's Move to Trash each show a native sheet "Are you sure you want to move “name” to the Trash?" (several items: "these N items"). **Cancel** (or Esc) leaves everything untouched; **Move to Trash** trashes and selects the next item. Pressing ⌘⌫ repeatedly does not stack dialogs.

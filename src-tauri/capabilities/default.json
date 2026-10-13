@@ -12,6 +12,7 @@
     "core:window:allow-set-focus",
     "core:window:allow-set-title",
     "core:menu:default",
+    "dialog:allow-ask",
     "store:default",
     "window-state:default"
   ]

@@ -207,3 +207,9 @@ Measured on the development machine (Apple Silicon, macOS 26.6.2, window focused
 
 - **Enter opens the selection** (same as ⌘↓): a single folder or symlink to a folder is entered, every other selected item is opened with its default app (packages such as `.app` launch), folders inside a multi-selection are skipped. This supersedes spec section 9.2 ("Return reserved for rename") and the earlier M8 behavior where Return started renaming.
 - **F2 renames** the single selected item (any kind). It is handled in `lib/keyboard.ts` (content pane only, ignored while an editor is open) rather than as a menu accelerator, because menu accelerators are still unverified (spike S5); `File ▸ Rename` and the context menu keep working without a shortcut hint.
+
+### S3 Move to Trash confirmation
+
+- Every Move to Trash asks first, with a native macOS sheet (`@tauri-apps/plugin-dialog` `ask`, plugin pinned to major 2, permission `dialog:allow-ask`): "Are you sure you want to move “name” to the Trash?" (or "these N items") plus "You can restore items from the Trash.", buttons **Move to Trash** / **Cancel**.
+- `fileOps.trashSelection()` is the only caller of `trash_paths`, so ⌘⌫, File ▸ Move to Trash and the context menu are all covered. Only an explicit confirmation continues; a dialog that cannot be shown counts as not confirmed (status-bar message), and a flag prevents stacked dialogs.
+- `tauri-plugin-dialog` pulls in the `tauri-plugin-fs` crate as a dependency of its file pickers; that plugin is **not** registered and no `fs` permission is granted, so the "no `fs` plugin" rule (all file access in audited Rust commands) still holds.

@@ -1,3 +1,4 @@
+import { ask } from "@tauri-apps/plugin-dialog";
 import type { Entry } from "../api/bindings/Entry";
 import { commands, toAppError } from "../api/commands";
 import { useListing } from "../state/listing";
@@ -7,6 +8,7 @@ import { useUi } from "../state/ui";
 import { alreadyExistsMessage } from "./names";
 import { describeError } from "./open";
 import { getSelectedEntries } from "./selected";
+import { trashConfirmationText } from "./trashMessage";
 import { getVisiblePaths } from "./viewModel";
 
 export type RenameResult = { ok: true } | { ok: false; message: string; keepEditing: boolean };
@@ -73,10 +75,45 @@ export async function createFolder(): Promise<void> {
   }
 }
 
-/** Move to Trash for the selection; afterwards the selection moves to the next item (B7). */
+let trashDialogOpen = false;
+
+/**
+ * Asks the user to confirm moving `entries` to the Trash. Never resolves to true unless the user
+ * explicitly confirmed; any failure to show the dialog counts as "not confirmed".
+ */
+async function confirmTrash(entries: readonly Entry[]): Promise<boolean> {
+  try {
+    return await ask(trashConfirmationText(entries.map((e) => e.name)), {
+      title: "Move to Trash",
+      kind: "warning",
+      okLabel: "Move to Trash",
+      cancelLabel: "Cancel",
+    });
+  } catch (e) {
+    useUi.getState().flash(`Couldn’t show the confirmation: ${describeError(toAppError(e))}`);
+    return false;
+  }
+}
+
+/**
+ * Move to Trash for the selection, after a confirmation dialog. This is the only caller of the
+ * `trash_paths` command, so the menu, ⌘⌫ and the context menu are all guarded. Afterwards the
+ * selection moves to the next item (decisions B7).
+ */
 export async function trashSelection(): Promise<void> {
+  if (trashDialogOpen) return;
   const entries = getSelectedEntries();
   if (entries.length === 0) return;
+
+  trashDialogOpen = true;
+  let confirmed = false;
+  try {
+    confirmed = await confirmTrash(entries);
+  } finally {
+    trashDialogOpen = false;
+  }
+  if (!confirmed) return;
+
   try {
     await commands.trashPaths(entries.map((e) => e.path));
     await useNavigation.getState().refresh();
