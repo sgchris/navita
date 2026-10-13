@@ -75,9 +75,38 @@
 }
 
 .path-bar {
+  gap: 4px;
   height: var(--path-bar-height);
+  border-top: 1px solid var(--separator);
+  overflow: hidden;
+}
+
+.path-bar__segment {
+  flex: 0 1 auto;
+  min-width: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.path-bar__segment--last {
+  flex-shrink: 0;
+  color: var(--label);
+}
+
+.path-bar__segment:hover {
+  color: var(--label);
+}
+
+.path-bar__separator {
+  flex: none;
+  color: var(--label-tertiary);
 }
 
 .status-bar {
   height: var(--status-bar-height);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
