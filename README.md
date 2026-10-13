@@ -8,7 +8,8 @@ A minimal, fast, native-feeling file browser for macOS, built with Rust and Taur
 - **Icons** (default) and **List with details** views, switchable from the toolbar or with `⌘1` / `⌘2`.
 - Hidden files (dot-files and the macOS hidden flag) are **off** by default; toggle with the eye button or `⇧⌘.`.
 - Sorting by Name, Date Modified, Size and Kind with folders always first; Back / Forward history; path bar; status bar; live refresh; Finder-style keyboard shortcuts and native menus.
-- New Folder, inline Rename and Move to Trash.
+- Image files show thumbnails instead of icons (including HEIC, RAW and SVG); List view starts every folder with a `..` row.
+- New Folder, New File, inline Rename (F2) and Move to Trash (always asks first); Cut, Copy and Paste in the context menu use the system clipboard, so they work with Finder. Enter opens the selection.
 
 The full product and technical specification is in [`NAVITA_SPEC.md`](NAVITA_SPEC.md); deviations and decisions are in [`docs/DECISIONS.md`](docs/DECISIONS.md); the manual QA checklist is [`docs/QA.md`](docs/QA.md).
 
