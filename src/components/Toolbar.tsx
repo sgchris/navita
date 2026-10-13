@@ -8,6 +8,7 @@ import { useNavigation } from "../state/navigation";
 import { usePlaces } from "../state/places";
 import { usePrefs } from "../state/prefs";
 import { HiddenToggle } from "./HiddenToggle";
+import { NavButtons } from "./NavButtons";
 import { ViewSwitch } from "./ViewSwitch";
 
 export function Toolbar() {
@@ -23,6 +24,7 @@ export function Toolbar() {
       data-tauri-drag-region
       style={{ "--toolbar-padding-left": `${paddingLeft}px` } as CSSProperties}
     >
+      <NavButtons />
       <span className="toolbar__title" data-tauri-drag-region>
         {currentPath === null ? "" : currentPath === "/" ? rootName : basename(currentPath)}
       </span>

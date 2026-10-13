@@ -1,5 +1,8 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useNavigation } from "../state/navigation";
+import { usePlaces } from "../state/places";
 import { useUi } from "../state/ui";
+import { basename } from "./paths";
 
 /** Mirrors window focus into `html.window-inactive` and the ui store (spec 8.6 rule 9). */
 export async function initWindowActiveClass(): Promise<void> {
@@ -38,4 +41,16 @@ export function showWindowAfterPaint(): void {
       void getCurrentWindow().show();
     }),
   );
+}
+
+/** Keeps the (hidden) window title equal to the folder name for Mission Control and VoiceOver. */
+export function installWindowTitle(): void {
+  const update = () => {
+    const path = useNavigation.getState().currentPath;
+    if (path === null) return;
+    const title = path === "/" ? usePlaces.getState().rootName : basename(path);
+    void getCurrentWindow().setTitle(title);
+  };
+  useNavigation.subscribe(update);
+  usePlaces.subscribe(update);
 }

@@ -66,3 +66,12 @@
   background: color-mix(in srgb, var(--accent) 20%, transparent);
   color: var(--accent);
 }
+
+.toolbar__group--nav {
+  margin-right: 12px;
+}
+
+.segmented__item:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}

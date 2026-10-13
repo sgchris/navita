@@ -7,6 +7,7 @@ import { installKeyboard } from "./lib/keyboard";
 import {
   initWindowActiveClass,
   installNativeFeelGuards,
+  installWindowTitle,
   showWindowAfterPaint,
 } from "./lib/platform";
 import { useListing } from "./state/listing";
@@ -29,6 +30,7 @@ async function boot(): Promise<void> {
   installNativeFeelGuards();
   installWiring();
   installKeyboard();
+  installWindowTitle();
   void initWindowActiveClass();
 
   const [home] = await Promise.all([commands.homeDir(), usePlaces.getState().load()]);
