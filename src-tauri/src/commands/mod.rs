@@ -1,6 +1,7 @@
 pub mod fs;
 pub mod menu;
 pub mod open;
+pub mod ops;
 pub mod places;
 pub mod watch;
 

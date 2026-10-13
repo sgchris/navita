@@ -1,6 +1,7 @@
 pub mod hidden;
 pub mod kind;
 pub mod listing;
+pub mod ops;
 pub mod package;
 
 use std::path::{Path, PathBuf};

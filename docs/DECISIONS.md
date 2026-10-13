@@ -186,3 +186,9 @@ Measured on the development machine (Apple Silicon, macOS 26.6.2, window focused
 - `codesign -dv`: identifier `com.sgchris.navita`, ad-hoc signature, flags `adhoc,runtime`. `plutil -p Info.plist`: bundle id `com.sgchris.navita`, `LSMinimumSystemVersion 13.0`, version 0.1.0 and all six usage-description keys (Desktop, Documents, Downloads, removable volumes, network volumes, Apple events).
 - **Entitlement added:** the ad-hoc signature carries the hardened-runtime flag, and under the hardened runtime macOS silently blocks Apple events unless the app has `com.apple.security.automation.apple-events`; without it Get Info could never reach Finder (no prompt, just an error). `src-tauri/Entitlements.plist` (referenced by `bundle.macOS.entitlements`) grants it; `codesign -d --entitlements -` confirms it is embedded.
 - The built app launches (`open -n`), its 1100×700 window is on screen (CoreGraphics) and the process keeps running for the 20 s check with no crash report.
+
+### M8 notes
+
+- **Trash tests:** the gate tests use a fake `Trasher` (so `npm run check` never fills the real Trash); one `#[ignore]`d test (`cargo test real_trash -- --ignored`) moves a uniquely named empty file through the real `NSFileManager` path. It was run once; the empty file `navita-test-<pid>-trash.tmp` stays in the Trash because the agent cannot read `~/.Trash` (TCC) to remove it.
+- Name validation reasons: empty -> "A name can't be empty."; `.`, `..` or NUL -> "That name isn't allowed." (not listed in B32); `/` or `:` -> "Names can't contain “/” or “:”."; over 255 UTF-8 bytes -> "Name is too long.". `lib/names.ts` mirrors them exactly.
+- `rename_path` returns the new absolute path; renaming to the identical name is a no-op that returns the old path.
