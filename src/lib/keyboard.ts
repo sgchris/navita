@@ -1,5 +1,6 @@
 import { focusIndexOf, listTarget } from "./selectionReducer";
 import { gridTarget, type GridKey } from "./grid";
+import { startRename } from "./fileOps";
 import { openSelected } from "./open";
 import {
   EMPTY_TYPE_AHEAD,
@@ -57,6 +58,11 @@ function handleContentKey(e: KeyboardEvent): void {
   }
   if (e.key === "Escape") {
     selection.clear();
+    return;
+  }
+  if (e.key === "Enter") {
+    e.preventDefault();
+    startRename();
     return;
   }
   if (SUPPRESSED.has(e.key)) {

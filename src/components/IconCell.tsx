@@ -7,6 +7,7 @@ import { showItemMenu } from "../lib/contextMenu";
 import { openSelected } from "../lib/open";
 import { useSelection } from "../state/selection";
 import { FileIcon } from "./FileIcon";
+import { RenameInput } from "./RenameInput";
 
 /** Two lines of text inside the cell minus padding, minus slack for wrapping at line ends. */
 const NAME_BUDGET = 2 * (CELL_SIZE - 8) - 6;
@@ -14,9 +15,10 @@ const NAME_BUDGET = 2 * (CELL_SIZE - 8) - 6;
 interface Props {
   entry: Entry;
   selected: boolean;
+  renaming: boolean;
 }
 
-export const IconCell = memo(function IconCell({ entry, selected }: Props) {
+export const IconCell = memo(function IconCell({ entry, selected, renaming }: Props) {
   const onClick = (e: MouseEvent) => {
     if (e.button !== 0) return;
     useSelection.getState().click(entry.path, { meta: e.metaKey, shift: e.shiftKey });
@@ -46,7 +48,11 @@ export const IconCell = memo(function IconCell({ entry, selected }: Props) {
         <FileIcon entry={entry} variant="grid" />
       </div>
       <div className="icon-cell__name">
-        <span className="icon-cell__label">{truncateName(entry.name, NAME_BUDGET, 12)}</span>
+        {renaming ? (
+          <RenameInput entry={entry} variant="grid" />
+        ) : (
+          <span className="icon-cell__label">{truncateName(entry.name, NAME_BUDGET, 12)}</span>
+        )}
       </div>
     </div>
   );

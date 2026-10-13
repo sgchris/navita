@@ -42,8 +42,8 @@ fn apply(h: &MenuHandles, s: &MenuState) -> tauri::Result<()> {
     h.back.set_enabled(s.can_back)?;
     h.forward.set_enabled(s.can_forward)?;
     h.up.set_enabled(s.can_up)?;
-    // `file.rename` and `file.trash` stay disabled until M8 adds file operations.
-    let _ = (&h.rename, &h.trash);
+    h.rename.set_enabled(s.single_selection)?;
+    h.trash.set_enabled(s.has_selection)?;
     Ok(())
 }
 

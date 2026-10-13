@@ -16,6 +16,7 @@ export function IconGrid({ entries }: Props) {
   const [width, setWidth] = useState(0);
   const selected = useSelection((s) => s.selected);
   const focus = useSelection((s) => s.focus);
+  const renamingPath = useUi((s) => s.renamingPath);
   const registerScrollApi = useUi((s) => s.registerScrollApi);
   const setColumns = useUi((s) => s.setColumns);
 
@@ -85,7 +86,12 @@ export function IconGrid({ entries }: Props) {
               style={{ transform: `translateY(${item.start}px)`, height: CELL_SIZE }}
             >
               {slice.map((entry) => (
-                <IconCell key={entry.path} entry={entry} selected={selected.has(entry.path)} />
+                <IconCell
+                  key={entry.path}
+                  entry={entry}
+                  selected={selected.has(entry.path)}
+                  renaming={renamingPath === entry.path}
+                />
               ))}
             </div>
           );

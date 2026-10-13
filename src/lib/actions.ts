@@ -1,5 +1,6 @@
 import { commands, toAppError } from "../api/commands";
 import { nextSort, type SortKey } from "./sort";
+import { createFolder, startRename, trashSelection } from "./fileOps";
 import { describeError, openSelected } from "./open";
 import { getSelectedEntries } from "./selected";
 import { useNavigation } from "../state/navigation";
@@ -68,6 +69,12 @@ function goToPlace(kind: Place["kind"]): void {
 
 /** Runs an action by id; unknown ids are ignored. */
 export function dispatchAction(id: string): void {
+  // While a name is being edited only Select All (of the text) is honoured (decisions B31).
+  if (useUi.getState().renamingPath !== null) {
+    if (id === "edit.selectAll")
+      document.querySelector<HTMLInputElement>(".rename-input")?.select();
+    return;
+  }
   const prefs = usePrefs.getState();
   const navigation = useNavigation.getState();
   const sortKey = SORT_KEYS[id];
@@ -103,9 +110,14 @@ export function dispatchAction(id: string): void {
       return;
     }
     case "file.newFolder":
+      void createFolder();
+      return;
     case "file.rename":
+      startRename();
+      return;
     case "file.trash":
-      return; // implemented in M8
+      void trashSelection();
+      return;
     case "edit.selectAll":
       useSelection.getState().selectAll();
       return;

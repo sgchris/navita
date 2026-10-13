@@ -35,10 +35,18 @@ export function describeError(error: ReturnType<typeof toAppError>): string {
       return "permission denied.";
     case "notFound":
       return "item not found.";
+    case "notADirectory":
+      return "not a folder.";
+    case "invalidPath":
+      return "invalid path.";
+    case "alreadyExists":
+      return "an item with that name already exists.";
+    case "invalidName":
+      return error.reason;
+    case "protected":
+      return "this item is protected.";
     case "io":
       return error.message;
-    default:
-      return error.code;
   }
 }
 

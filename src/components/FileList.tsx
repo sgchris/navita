@@ -29,6 +29,7 @@ export function FileList({ entries }: Props) {
   const setSort = usePrefs((s) => s.setSort);
   const selected = useSelection((s) => s.selected);
   const focus = useSelection((s) => s.focus);
+  const renamingPath = useUi((s) => s.renamingPath);
   const registerScrollApi = useUi((s) => s.registerScrollApi);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- "now" is refreshed whenever the listing changes
   const now = useMemo(() => new Date(), [entries]);
@@ -114,6 +115,7 @@ export function FileList({ entries }: Props) {
                 key={entry.path}
                 entry={entry}
                 selected={selected.has(entry.path)}
+                renaming={renamingPath === entry.path}
                 nameBudget={nameBudget}
                 now={now}
                 top={item.start - COLUMN_HEADER_HEIGHT}

@@ -27,6 +27,9 @@ export const commands = {
   getInfo: (paths: string[]) => invoke<void>("get_info", { paths }),
   copyText: (text: string) => invoke<void>("copy_text", { text }),
   openFullDiskAccessSettings: () => invoke<void>("open_full_disk_access_settings"),
+  createFolder: (parent: string) => invoke<string>("create_folder", { parent }),
+  renamePath: (path: string, newName: string) => invoke<string>("rename_path", { path, newName }),
+  trashPaths: (paths: string[]) => invoke<void>("trash_paths", { paths }),
   watchDir: (path: string) => invoke<void>("watch_dir", { path }),
   setMenuState: (state: MenuState) => invoke<void>("set_menu_state", { state }),
 };

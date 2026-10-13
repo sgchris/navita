@@ -100,13 +100,12 @@ pub fn build(app: &AppHandle) -> tauri::Result<(Menu<Wry>, MenuHandles)> {
         Some("CmdOrCtrl+Alt+C"),
         true,
     )?;
-    // File operations are enabled in M8.
     let new_folder = item(
         app,
         "file.newFolder",
         "New Folder",
         Some("CmdOrCtrl+Shift+N"),
-        false,
+        true,
     )?;
     let rename = item(app, "file.rename", "Rename", None, false)?;
     let trash = item(

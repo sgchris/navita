@@ -63,3 +63,12 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] Try to select text by dragging or double-clicking labels: nothing gets selected.
 - [ ] Permission-denied folder (for example `~/Library/Mail` without Full Disk Access): the error state shows the lock icon, "Open Privacy Settings…" opens System Settings, "Go Back" returns.
 - [ ] Long names are middle-truncated (`report-final-…-v3.pdf`) in both views; hidden items are dimmed; symlinks show the arrow badge.
+
+## M8 — File operations
+
+- [ ] ⇧⌘N (File ▸ New Folder) creates "untitled folder" (then "untitled folder 2", …), selects it and opens the name editor with the whole name selected; type a name and press Return.
+- [ ] Select one item and press Return (or File ▸ Rename): the editor opens with the extension not selected (`report.pdf` → `report` selected); Esc cancels; clicking elsewhere commits; an empty or unchanged name cancels.
+- [ ] Typing `/` or `:` shows a red outline with the reason on Return; a name that already exists shows "A file named “…” already exists."; a case-only rename (`a.txt` → `A.txt`) works.
+- [ ] ⌘⌫ (File ▸ Move to Trash) moves the selection to the Trash (check in Finder) and selects the next item; the Trash item can be restored by dragging it out.
+- [ ] `~/Documents`, `~/Desktop`, `~/Downloads`, `~/Library`, the home folder and top-level folders such as `/Users` refuse Rename and Move to Trash with a status-bar message.
+- [ ] Changes made in Terminal while the editor is closed still refresh the list; the context menu on an item shows Rename… (only for a single selection) and Move to Trash enabled.

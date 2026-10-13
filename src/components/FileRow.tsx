@@ -8,10 +8,12 @@ import { showItemMenu } from "../lib/contextMenu";
 import { openSelected } from "../lib/open";
 import { useSelection } from "../state/selection";
 import { FileIcon } from "./FileIcon";
+import { RenameInput } from "./RenameInput";
 
 interface Props {
   entry: Entry;
   selected: boolean;
+  renaming: boolean;
   /** Pixel budget for the (middle-truncated) name text. */
   nameBudget: number;
   now: Date;
@@ -19,7 +21,14 @@ interface Props {
   top: number;
 }
 
-export const FileRow = memo(function FileRow({ entry, selected, nameBudget, now, top }: Props) {
+export const FileRow = memo(function FileRow({
+  entry,
+  selected,
+  renaming,
+  nameBudget,
+  now,
+  top,
+}: Props) {
   const onClick = (e: MouseEvent) => {
     if (e.button !== 0) return;
     useSelection.getState().click(entry.path, { meta: e.metaKey, shift: e.shiftKey });
@@ -49,9 +58,13 @@ export const FileRow = memo(function FileRow({ entry, selected, nameBudget, now,
       <div className="file-row__inner">
         <div className="file-row__name">
           <FileIcon entry={entry} variant="list" />
-          <span className="file-row__label" title={entry.name}>
-            {truncateName(entry.name, nameBudget, 13)}
-          </span>
+          {renaming ? (
+            <RenameInput entry={entry} variant="list" />
+          ) : (
+            <span className="file-row__label" title={entry.name}>
+              {truncateName(entry.name, nameBudget, 13)}
+            </span>
+          )}
         </div>
         <div className="file-row__cell">{formatDate(entry.modifiedMs, now)}</div>
         <div className="file-row__cell file-row__cell--size">{formatSize(entry.size)}</div>

@@ -200,3 +200,31 @@
   width: 18px;
   height: 18px;
 }
+
+/* inline rename editor (list and grid) */
+.rename-input {
+  min-width: 0;
+  height: 20px;
+  padding: 0 4px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--content-bg);
+  color: var(--label);
+  font: inherit;
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.rename-input--list {
+  flex: 1;
+}
+
+.rename-input--grid {
+  width: 92px;
+  text-align: center;
+}
+
+.rename-input--invalid {
+  border-color: var(--icon-pdf);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--icon-pdf) 30%, transparent);
+}

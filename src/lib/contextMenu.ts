@@ -2,7 +2,6 @@ import { CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu } from "@tau
 import { usePrefs } from "../state/prefs";
 import { useSelection } from "../state/selection";
 import { dispatchAction, type ActionId } from "./actions";
-import { FILE_OPS_ENABLED } from "./features";
 import type { SortKey } from "./sort";
 
 const item = (text: string, action: ActionId, enabled = true) =>
@@ -44,8 +43,8 @@ export async function buildItemMenu(): Promise<Menu> {
       item("Copy Path", "file.copyPath"),
       item("Get Info", "file.getInfo"),
       separator(),
-      item("Rename…", "file.rename", FILE_OPS_ENABLED && single),
-      item("Move to Trash", "file.trash", FILE_OPS_ENABLED),
+      item("Rename…", "file.rename", single),
+      item("Move to Trash", "file.trash"),
     ]),
   );
 }
