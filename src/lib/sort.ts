@@ -27,6 +27,20 @@ type SortEntry = Pick<
   "name" | "path" | "isDirLike" | "size" | "modifiedMs" | "kind" | "extension" | "isBrokenLink"
 >;
 
+/** Natural, case-insensitive name comparator with the deterministic tie-breaks of decisions B10. */
+export function createNameComparator<T extends { name: string; path: string }>(
+  locale?: string,
+): (a: T, b: T) => number {
+  const natural = new Intl.Collator(locale, { numeric: true, sensitivity: "base" });
+  return (a, b) => {
+    const c = natural.compare(a.name, b.name);
+    if (c !== 0) return c;
+    const strict = a.name.localeCompare(b.name, locale, { numeric: true, sensitivity: "variant" });
+    if (strict !== 0) return strict;
+    return a.path < b.path ? -1 : a.path > b.path ? 1 : 0;
+  };
+}
+
 /**
  * Builds the entry comparator (decisions B10): `isDirLike` entries first in both directions;
  * direction only reverses the primary key; nulls last in both directions; ties fall back to the
@@ -39,13 +53,7 @@ export function createComparator<T extends SortEntry>(
   const natural = new Intl.Collator(locale, { numeric: true, sensitivity: "base" });
   const sign = sort.dir === "asc" ? 1 : -1;
 
-  const nameAsc = (a: T, b: T): number => {
-    const c = natural.compare(a.name, b.name);
-    if (c !== 0) return c;
-    const strict = a.name.localeCompare(b.name, locale, { numeric: true, sensitivity: "variant" });
-    if (strict !== 0) return strict;
-    return a.path < b.path ? -1 : a.path > b.path ? 1 : 0;
-  };
+  const nameAsc = createNameComparator<T>(locale);
 
   const nullable = (x: number | null, y: number | null): number => {
     if (x === null && y === null) return 0;

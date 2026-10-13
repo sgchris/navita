@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import type { SortSpec } from "../lib/sort";
+import type { SectionId } from "../lib/treeFlatten";
+
+export type { SectionId };
 
 export type ViewMode = "icons" | "list";
-export type SectionId = "favorites" | "locations" | "folders";
 
 export interface ColumnWidths {
   modified: number;
