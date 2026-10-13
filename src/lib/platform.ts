@@ -1,10 +1,13 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useUi } from "../state/ui";
 
-/** Mirrors window focus into `html.window-inactive` (spec 8.6 rule 9). */
+/** Mirrors window focus into `html.window-inactive` and the ui store (spec 8.6 rule 9). */
 export async function initWindowActiveClass(): Promise<void> {
   const win = getCurrentWindow();
-  const apply = (focused: boolean) =>
+  const apply = (focused: boolean) => {
     document.documentElement.classList.toggle("window-inactive", !focused);
+    useUi.getState().setWindowActive(focused);
+  };
   apply(await win.isFocused());
   await win.onFocusChanged(({ payload }) => apply(payload));
 }

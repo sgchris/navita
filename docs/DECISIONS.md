@@ -118,3 +118,5 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 - `lib/selectionReducer.ts` also exports `listTarget`; arrow targets for the Icons view are in `lib/grid.ts`.
 - `open_path` moved from M4.4 to M2.2 (M2's acceptance requires opening files). `reveal_in_finder`, `get_info`, `copy_text` and `open_full_disk_access_settings` stay in M4.4.
 - `listing.fetch` never commits state: navigation commits listing, `currentPath` and selection in the same tick (`commitSuccess`), so the UI never shows a new path with the old listing.
+- **Dev log forwarder (agent smoke runs):** in `tauri dev`, `src/lib/devLog.ts` forwards `window.onerror`, unhandled rejections and `console.error/warn/info` to the Vite dev server (`/__devlog`), which appends them to the file named by `NAVITA_DEV_LOG` (discarded when unset). This is how plan section 5.2 detects `Uncaught` errors, because the Tauri dev terminal does not show the webview console. The code is inactive in production builds (`import.meta.env.DEV`).
+- `eslint` rule `react-hooks/incompatible-library` is off: it flags `@tanstack/react-virtual`'s `useVirtualizer`, which is used as documented.

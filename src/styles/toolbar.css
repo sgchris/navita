@@ -1,0 +1,68 @@
+.toolbar__spacer {
+  flex: 1;
+  min-width: 8px;
+  align-self: stretch;
+}
+
+.toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.toolbar__button,
+.segmented {
+  height: 32px;
+  border-radius: var(--radius-control);
+  background: var(--control-bg);
+  color: var(--label);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar__button {
+  min-width: 40px;
+  padding: 0 12px;
+}
+
+.toolbar__button:hover,
+.segmented__item:hover {
+  background: var(--control-bg-hover);
+}
+
+.toolbar__button:active,
+.segmented__item:active {
+  background: var(--control-bg-active);
+}
+
+.toolbar__button:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.toolbar__button--on {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent);
+}
+
+.segmented {
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmented__item {
+  height: 28px;
+  min-width: 36px;
+  border-radius: var(--radius-control);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.segmented__item--active,
+.segmented__item--active:hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent);
+}

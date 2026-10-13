@@ -8,6 +8,8 @@ export default tseslint.config(
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
+      // @tanstack/react-virtual's hook is flagged by the React Compiler lint; it is used as documented.
+      "react-hooks/incompatible-library": "off",
     },
   },
 );

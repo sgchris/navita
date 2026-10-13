@@ -1,19 +1,24 @@
+import type { CSSProperties } from "react";
+import { ContentPane } from "./components/ContentPane";
+import { Toolbar } from "./components/Toolbar";
+import { cx } from "./lib/cx";
+import { usePrefs } from "./state/prefs";
+
 export default function App() {
+  const sidebarVisible = usePrefs((s) => s.sidebarVisible);
+  const sidebarWidth = usePrefs((s) => s.sidebarWidth);
   return (
-    <div className="app">
+    <div
+      className={cx("app", !sidebarVisible && "app--no-sidebar")}
+      style={{ "--sidebar-width": `${sidebarWidth}px` } as CSSProperties}
+    >
       <div className="sidebar-col">
         <div className="sidebar-col__drag" data-tauri-drag-region />
         <div className="sidebar" />
       </div>
       <div className="content-col">
-        <div className="toolbar" data-tauri-drag-region>
-          <span className="toolbar__title" data-tauri-drag-region>
-            Navita
-          </span>
-        </div>
-        <div className="content" />
-        <div className="path-bar" />
-        <div className="status-bar" />
+        <Toolbar />
+        <ContentPane />
       </div>
     </div>
   );
