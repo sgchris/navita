@@ -1,4 +1,5 @@
 pub mod error;
+pub mod fs;
 pub mod model;
 
 use tauri_plugin_window_state::StateFlags;
