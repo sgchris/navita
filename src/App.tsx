@@ -1,8 +1,4 @@
-import { Swatches } from "./components/Swatches";
-
 export default function App() {
-  if (import.meta.env.VITE_SWATCHES) return <Swatches />;
-
   return (
     <div className="app">
       <div className="sidebar-col">

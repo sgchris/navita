@@ -83,4 +83,30 @@ Authority: this file wins over `NAVITA_SPEC.md` where they differ. Spike results
 
 ## Spike results and later decisions
 
-(appended as they happen)
+### M0 toolchain notes
+
+- `npm i` raised no peer conflicts. Resolved: typescript **6.0.3** (npm's `latest` dist-tag; `npm view typescript version` reports 7.0.2 as the highest published, but plain `npm i typescript` selects 6.0.3), vite 8.3.4, vitest 5.0.4, eslint 10.12.0, typescript-eslint 8.71.2, react 19.3.0, `@tauri-apps/api` 2.12.3 / `@tauri-apps/cli` 2.12.2 (matches `tauri` crate 2.12.3).
+- Two tsconfig files instead of one: `tsconfig.json` (`src`, browser types) and `tsconfig.node.json` (`vite.config.ts`, `eslint.config.js`, node types); `npm run typecheck` runs both. Reason: keeps Node globals out of browser code.
+- `npm run bindings:check` compares the working tree of `src/api/bindings` with the git index after `cargo test`. Workflow when models change: run `npm run test:rust`, `git add src/api/bindings`, then `npm run check`.
+- Rust: `StateFlags::all() - StateFlags::VISIBLE`, `app.security.devCsp`, `trafficLightPosition`, `windowEffects`, `dragDropEnabled`, `visible` and the capability permission names listed in `capabilities/default.json` were all accepted by `tauri-build` (S6 satisfied: no permission was removed).
+- ts-rs 12 writes one `.ts` file per type into `src/api/bindings` via `TS_RS_EXPORT_DIR` from the root `.cargo/config.toml`; `u64`/`i64` fields use `#[ts(type = "number")]`.
+
+### S1: `-apple-system-*` keywords in the Tahoe WKWebView (measured via `CSS.supports` and computed styles in `tauri dev`, light and dark rendered side by side with forced `color-scheme`)
+
+| Keyword                                                  | Supported                                        |
+| -------------------------------------------------------- | ------------------------------------------------ |
+| `-apple-system-label`                                    | yes                                              |
+| `-apple-system-secondary-label`                          | yes                                              |
+| `-apple-system-tertiary-label`                           | yes                                              |
+| `-apple-system-separator`                                | yes                                              |
+| `-apple-system-control-accent`                           | yes (resolves to rgb(0,122,255) in both schemes) |
+| `-apple-system-selected-content-background`              | yes (light rgb(0,99,225), dark rgb(0,88,208))    |
+| `-apple-system-unemphasized-selected-content-background` | yes (light rgb(220,220,220), dark rgb(70,70,70)) |
+| `-apple-system-alternate-selected-control-text`          | **no** -> the `#ffffff` fallback stays active    |
+| `-apple-system-text-background`                          | yes (light rgb(255,255,255), dark rgb(30,30,30)) |
+
+`color-mix()` with a system keyword resolves (e.g. `--control-bg` -> `color(srgb 0 0 0 / 0.059)`). The `@supports` structure in `tokens.css` needs no change.
+
+### S2, S3, S4: not verifiable by the agent
+
+`screencapture` fails in the agent's session ("could not create image from display"), so visual checks are left to the user (see docs/QA.md, M0): no white flash on launch, window frame restored after relaunch (S2); traffic lights vertically centered in the 52 px toolbar (S3, currently the spec value `trafficLightPosition: {x: 20, y: 24}`, adjust in steps of 2 px if off-center); double-click on the toolbar zooms the window (S4). If any of these fails, ask the user (see plan section 6).
