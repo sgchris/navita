@@ -8,7 +8,9 @@ import { useVolume } from "./volume";
 export function installWiring(): void {
   // Items that become hidden must leave the selection.
   usePrefs.subscribe((state, previous) => {
-    if (state.showHidden !== previous.showHidden) useSelection.getState().prune();
+    if (state.showHidden !== previous.showHidden || state.viewMode !== previous.viewMode) {
+      useSelection.getState().prune();
+    }
   });
 
   // Remember which tree folders are expanded.

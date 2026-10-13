@@ -16,7 +16,8 @@ import {
 } from "../lib/history";
 import { basename, parentOf } from "../lib/paths";
 import { reconcileSelection, selectOnly } from "../lib/selectionReducer";
-import { getVisiblePaths } from "../lib/viewModel";
+import { getVisibleEntries } from "../lib/viewModel";
+import { isParentPath } from "../lib/parentRow";
 import { useListing } from "./listing";
 import { usePrefs } from "./prefs";
 import { useSelection } from "./selection";
@@ -186,15 +187,20 @@ export const useNavigation = create<NavigationState>()((set, get) => {
         return;
       }
       const selection = useSelection.getState();
-      const oldPaths = getVisiblePaths();
+      const parentOnly =
+        selection.selected.size === 1 && isParentPath([...selection.selected][0] ?? "");
+      const oldPaths = getVisibleEntries().map((e) => e.path);
       useListing.getState().commit(result.listing);
-      selection.set(
-        reconcileSelection(
-          { selected: selection.selected, anchor: selection.anchor, focus: selection.focus },
-          oldPaths,
-          getVisiblePaths(),
-        ),
-      );
+      // Reconcile on real items only; a selection of just the ".." row is left alone (B7).
+      if (!parentOnly) {
+        selection.set(
+          reconcileSelection(
+            { selected: selection.selected, anchor: selection.anchor, focus: selection.focus },
+            oldPaths,
+            getVisibleEntries().map((e) => e.path),
+          ),
+        );
+      }
       if (import.meta.env.DEV) {
         console.info(`[navita] refreshed ${path} entries=${result.listing.entries.length}`);
       }

@@ -93,3 +93,9 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 - [ ] Right-click a **folder**: New Folder and New File are listed; choosing one opens that folder, selects the new item and opens its name editor (type a name, Return).
 - [ ] Right-click **empty space**: New Folder and New File create the item in the current folder with the editor open; `untitled file` is an empty file on disk and collisions get `untitled file 2`, `3`, …
 - [ ] Right-click a **file** (or several selected items): no New Folder / New File entries.
+
+### S5 — ".." row
+
+- [ ] In List view every folder (including an empty one) starts with a `..` row; it is absent in Icons view and at `/`; it stays first for every sort order and is shown even with hidden files off.
+- [ ] Click `..` selects it; Enter, ⌘↓ or double-click goes to the parent and selects the folder you came from; arrow keys move through it.
+- [ ] ⌘A then Move to Trash / Copy Path / Reveal never includes `..`; the status bar counts only real items.

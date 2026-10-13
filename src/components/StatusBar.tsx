@@ -1,4 +1,5 @@
 import { formatStatus } from "../lib/format";
+import { countRealSelected } from "../lib/parentRow";
 import { useVisibleEntries } from "../lib/viewModel";
 import { useSelection } from "../state/selection";
 import { useUi } from "../state/ui";
@@ -8,7 +9,7 @@ import { useVolume } from "../state/volume";
 export function StatusBar() {
   const flashMessage = useUi((s) => s.flashMessage);
   const count = useVisibleEntries().length;
-  const selected = useSelection((s) => s.selected.size);
+  const selected = useSelection((s) => countRealSelected(s.selected));
   const freeBytes = useVolume((s) => s.freeBytes);
   return (
     <div className="status-bar">{flashMessage ?? formatStatus({ count, selected, freeBytes })}</div>

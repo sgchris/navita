@@ -4,8 +4,9 @@ import { cx } from "../lib/cx";
 import { fileTypeOf } from "../lib/fileTypes";
 import { formatDate, formatSize } from "../lib/format";
 import { truncateName } from "../lib/measure";
-import { showItemMenu } from "../lib/contextMenu";
+import { showBackgroundMenu, showItemMenu } from "../lib/contextMenu";
 import { openSelected } from "../lib/open";
+import { isParentEntry } from "../lib/parentRow";
 import { useSelection } from "../state/selection";
 import { FileIcon } from "./FileIcon";
 import { RenameInput } from "./RenameInput";
@@ -52,7 +53,7 @@ export const FileRow = memo(function FileRow({
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        void showItemMenu(entry.path);
+        void (isParentEntry(entry) ? showBackgroundMenu() : showItemMenu(entry.path));
       }}
     >
       <div className="file-row__inner">

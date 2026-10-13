@@ -1,12 +1,13 @@
 import { commands, type MenuState } from "../api/commands";
 import { selectCanBack, selectCanForward, selectCanUp, useNavigation } from "../state/navigation";
+import { countRealSelected } from "./parentRow";
 import { usePrefs } from "../state/prefs";
 import { useSelection } from "../state/selection";
 
 function computeState(): MenuState {
   const prefs = usePrefs.getState();
   const navigation = useNavigation.getState();
-  const selected = useSelection.getState().selected.size;
+  const selected = countRealSelected(useSelection.getState().selected);
   return {
     viewMode: prefs.viewMode,
     showHidden: prefs.showHidden,

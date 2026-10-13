@@ -3,6 +3,7 @@ import { usePrefs } from "../state/prefs";
 import { useSelection } from "../state/selection";
 import { dispatchAction, type ActionId } from "./actions";
 import { createItem } from "./fileOps";
+import { countRealSelected } from "./parentRow";
 import { getSelectedEntries } from "./selected";
 import type { SortKey } from "./sort";
 
@@ -43,7 +44,7 @@ async function popup(build: () => Promise<Menu>): Promise<void> {
  * it. Files and multi-selections get no creation items.
  */
 export async function buildItemMenu(folder: string | null = null): Promise<Menu> {
-  const single = useSelection.getState().selected.size === 1;
+  const single = countRealSelected(useSelection.getState().selected) === 1;
   const creation = folder
     ? [
         run("New Folder", () => void createItem("folder", folder)),

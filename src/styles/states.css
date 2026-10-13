@@ -51,3 +51,7 @@
   background: var(--accent);
   filter: brightness(1.1);
 }
+
+.state--below-list {
+  top: calc(var(--column-header-height) + var(--row-height));
+}

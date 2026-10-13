@@ -9,7 +9,7 @@ import {
   type ClickModifiers,
   type SelectionState,
 } from "../lib/selectionReducer";
-import { getVisiblePaths } from "../lib/viewModel";
+import { getVisibleEntries, getVisiblePaths } from "../lib/viewModel";
 
 interface SelectionActions {
   click: (path: string, mods: ClickModifiers) => void;
@@ -27,7 +27,8 @@ export const useSelection = create<SelectionState & SelectionActions>()((set, ge
   ...EMPTY_SELECTION,
   click: (path, mods) => set(clickReducer(get(), getVisiblePaths(), path, mods)),
   moveTo: (index, extend) => set(moveFocusReducer(get(), getVisiblePaths(), index, extend)),
-  selectAll: () => set(selectAllReducer(getVisiblePaths())),
+  // Select All never includes the ".." row.
+  selectAll: () => set(selectAllReducer(getVisibleEntries().map((e) => e.path))),
   selectOnly: (path) => set(selectOnlyReducer(path)),
   clear: () => set(EMPTY_SELECTION),
   prune: () => set(pruneReducer(get(), getVisiblePaths())),

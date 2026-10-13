@@ -10,7 +10,7 @@ import {
 } from "./typeToSelect";
 import { getSidebarRows } from "./sidebarModel";
 import { rowKey, type SidebarRow } from "./treeFlatten";
-import { getVisibleEntries } from "./viewModel";
+import { getListEntries, getVisibleEntries } from "./viewModel";
 import { usePrefs } from "../state/prefs";
 import { useSelection } from "../state/selection";
 import { useNavigation } from "../state/navigation";
@@ -45,7 +45,7 @@ function handleContentKey(e: KeyboardEvent): void {
   const arrow = ARROWS[e.key];
   if (arrow) {
     e.preventDefault();
-    const paths = entries.map((entry) => entry.path);
+    const paths = getListEntries().map((entry) => entry.path);
     const focusIndex = focusIndexOf(selection, paths);
     const target =
       usePrefs.getState().viewMode === "list"
@@ -83,7 +83,8 @@ function handleContentKey(e: KeyboardEvent): void {
       entries.map((entry) => entry.name),
       next.text,
     );
-    if (index >= 0) selection.moveTo(index, false);
+    const match = entries[index];
+    if (match) selection.selectOnly(match.path);
   } else if (e.key === " ") {
     e.preventDefault(); // Space does nothing in v1 (decisions A12)
   }

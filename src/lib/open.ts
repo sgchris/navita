@@ -1,7 +1,9 @@
 import type { Entry } from "../api/bindings/Entry";
 import { commands, toAppError } from "../api/commands";
 import { useNavigation } from "../state/navigation";
+import { useSelection } from "../state/selection";
 import { useUi } from "../state/ui";
+import { isParentPath } from "./parentRow";
 import { getSelectedEntries } from "./selected";
 
 const BROKEN_ALIAS_MESSAGE = "The alias can’t be opened because the original item can’t be found.";
@@ -52,6 +54,13 @@ export function describeError(error: ReturnType<typeof toAppError>): string {
 
 /** Opens the current selection (double-click, ⌘↓). */
 export async function openSelected(): Promise<void> {
+  // The ".." row goes up (and selects the folder we came from).
+  const { selected } = useSelection.getState();
+  const only = selected.size === 1 ? [...selected][0] : undefined;
+  if (only !== undefined && isParentPath(only)) {
+    await useNavigation.getState().up();
+    return;
+  }
   const entries = getSelectedEntries();
   if (entries.length > 0) await openEntries(entries);
 }

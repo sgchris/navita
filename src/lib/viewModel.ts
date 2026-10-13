@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Entry } from "../api/bindings/Entry";
 import { useListing } from "../state/listing";
 import { usePrefs } from "../state/prefs";
+import { withParentRow } from "./parentRow";
 import { sortEntries, type SortSpec } from "./sort";
 import { filterVisible } from "./visible";
 
@@ -30,8 +31,31 @@ export function getVisibleEntries(): Entry[] {
   return deriveVisible(entries, sort, showHidden);
 }
 
+/**
+ * Rows of the current view: the real visible entries, preceded by the ".." row in List view (not
+ * at the root). Used for rendering, keyboard navigation and range selection.
+ */
+export function getListEntries(): Entry[] {
+  const { path, status } = useListing.getState();
+  const { viewMode } = usePrefs.getState();
+  return withParentRow(getVisibleEntries(), path, viewMode === "list" && status === "ready");
+}
+
+/** Paths of {@link getListEntries} (includes the ".." row in List view). */
 export function getVisiblePaths(): string[] {
-  return getVisibleEntries().map((e) => e.path);
+  return getListEntries().map((e) => e.path);
+}
+
+/** React hook form of {@link getListEntries}. */
+export function useListEntries(): Entry[] {
+  const visible = useVisibleEntries();
+  const path = useListing((s) => s.path);
+  const status = useListing((s) => s.status);
+  const viewMode = usePrefs((s) => s.viewMode);
+  return useMemo(
+    () => withParentRow(visible, path, viewMode === "list" && status === "ready"),
+    [visible, path, status, viewMode],
+  );
 }
 
 /** React hook form of {@link getVisibleEntries}. */
