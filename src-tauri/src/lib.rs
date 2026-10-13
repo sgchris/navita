@@ -34,6 +34,7 @@ pub fn run() {
             commands::fs::list_subdirs,
             commands::fs::home_dir,
             commands::menu::set_menu_state,
+            commands::ops::create_file,
             commands::ops::create_folder,
             commands::ops::rename_path,
             commands::ops::trash_paths,

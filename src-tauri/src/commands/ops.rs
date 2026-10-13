@@ -12,6 +12,12 @@ pub async fn create_folder(parent: String) -> Result<String, AppError> {
     run_blocking(move || ops::create_folder(&parent)).await
 }
 
+/// Creates an empty `untitled file` (numbered on collision) in `parent` and returns its path.
+#[tauri::command]
+pub async fn create_file(parent: String) -> Result<String, AppError> {
+    run_blocking(move || ops::create_file(&parent)).await
+}
+
 /// Renames `path` to `new_name` inside the same folder and returns the new path.
 #[tauri::command]
 pub async fn rename_path(path: String, new_name: String) -> Result<String, AppError> {

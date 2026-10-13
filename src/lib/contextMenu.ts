@@ -2,18 +2,23 @@ import { CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu } from "@tau
 import { usePrefs } from "../state/prefs";
 import { useSelection } from "../state/selection";
 import { dispatchAction, type ActionId } from "./actions";
+import { createItem } from "./fileOps";
+import { getSelectedEntries } from "./selected";
 import type { SortKey } from "./sort";
 
-const item = (text: string, action: ActionId, enabled = true) =>
-  MenuItem.new({ text, enabled, action: () => dispatchAction(action) });
+const action = (text: string, id: ActionId, enabled = true) =>
+  MenuItem.new({ text, enabled, action: () => dispatchAction(id) });
 
-const check = (text: string, checked: boolean, action: ActionId) =>
-  CheckMenuItem.new({ text, checked, action: () => dispatchAction(action) });
+const run = (text: string, work: () => void, enabled = true) =>
+  MenuItem.new({ text, enabled, action: work });
+
+const check = (text: string, checked: boolean, id: ActionId) =>
+  CheckMenuItem.new({ text, checked, action: () => dispatchAction(id) });
 
 const separator = () => PredefinedMenuItem.new({ item: "Separator" });
 
 type MenuEntry = Awaited<
-  ReturnType<typeof item | typeof check | typeof separator | typeof Submenu.new>
+  ReturnType<typeof action | typeof check | typeof separator | typeof Submenu.new>
 >;
 
 const toMenu = (items: MenuEntry[]) => Menu.new({ items });
@@ -32,19 +37,31 @@ async function popup(build: () => Promise<Menu>): Promise<void> {
   }
 }
 
-/** Builds the item menu for the current selection (decisions B29). */
-export async function buildItemMenu(): Promise<Menu> {
+/**
+ * Builds the item menu for the current selection (decisions B29). `folder` is the path of the
+ * right-clicked folder when it is the only selected item: New Folder and New File then act inside
+ * it. Files and multi-selections get no creation items.
+ */
+export async function buildItemMenu(folder: string | null = null): Promise<Menu> {
   const single = useSelection.getState().selected.size === 1;
+  const creation = folder
+    ? [
+        run("New Folder", () => void createItem("folder", folder)),
+        run("New File", () => void createItem("file", folder)),
+        separator(),
+      ]
+    : [];
   return toMenu(
     await Promise.all([
-      item("Open", "file.open"),
+      action("Open", "file.open"),
       separator(),
-      item("Reveal in Finder", "file.reveal"),
-      item("Copy Path", "file.copyPath"),
-      item("Get Info", "file.getInfo"),
+      ...creation,
+      action("Reveal in Finder", "file.reveal"),
+      action("Copy Path", "file.copyPath"),
+      action("Get Info", "file.getInfo"),
       separator(),
-      item("Rename…", "file.rename", single),
-      item("Move to Trash", "file.trash"),
+      action("Rename…", "file.rename", single),
+      action("Move to Trash", "file.trash"),
     ]),
   );
 }
@@ -56,7 +73,7 @@ const SORT_ITEMS: Array<[SortKey, string, ActionId]> = [
   ["kind", "Kind", "view.sort.kind"],
 ];
 
-/** Builds the empty-space menu: View, Show Hidden Files, Sort By. */
+/** Builds the empty-space menu: View, Show Hidden Files, Sort By, New Folder, New File. */
 export async function buildBackgroundMenu(): Promise<Menu> {
   const { viewMode, showHidden, sort } = usePrefs.getState();
   const viewMenu = await Submenu.new({
@@ -69,20 +86,26 @@ export async function buildBackgroundMenu(): Promise<Menu> {
   const sortMenu = await Submenu.new({
     text: "Sort By",
     items: await Promise.all(
-      SORT_ITEMS.map(([key, label, action]) => check(label, sort.key === key, action)),
+      SORT_ITEMS.map(([key, label, id]) => check(label, sort.key === key, id)),
     ),
   });
   return toMenu([
     viewMenu,
     await check("Show Hidden Files", showHidden, "view.toggleHidden"),
     sortMenu,
+    await separator(),
+    await run("New Folder", () => void createItem("folder")),
+    await run("New File", () => void createItem("file")),
   ]);
 }
 
 /** Right-click on an item: select it if needed, then show the item menu. */
 export async function showItemMenu(path: string): Promise<void> {
   if (!useSelection.getState().selected.has(path)) useSelection.getState().selectOnly(path);
-  await popup(buildItemMenu);
+  const selected = getSelectedEntries();
+  const only = selected.length === 1 ? selected[0] : undefined;
+  const folder = only?.isDirLike ? only.path : null;
+  await popup(() => buildItemMenu(folder));
 }
 
 /** Right-click on empty space. */

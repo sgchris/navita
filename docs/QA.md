@@ -87,3 +87,9 @@ Tip for accelerator problems: start with `NAVITA_DEV_LOG=/tmp/navita.log npm run
 ### S3 — Trash confirmation
 
 - [ ] ⌘⌫, File ▸ Move to Trash and the context menu's Move to Trash each show a native sheet "Are you sure you want to move “name” to the Trash?" (several items: "these N items"). **Cancel** (or Esc) leaves everything untouched; **Move to Trash** trashes and selects the next item. Pressing ⌘⌫ repeatedly does not stack dialogs.
+
+### S4 — New Folder / New File in the context menu
+
+- [ ] Right-click a **folder**: New Folder and New File are listed; choosing one opens that folder, selects the new item and opens its name editor (type a name, Return).
+- [ ] Right-click **empty space**: New Folder and New File create the item in the current folder with the editor open; `untitled file` is an empty file on disk and collisions get `untitled file 2`, `3`, …
+- [ ] Right-click a **file** (or several selected items): no New Folder / New File entries.

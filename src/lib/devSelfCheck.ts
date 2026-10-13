@@ -3,7 +3,11 @@ import { uiFont } from "./measure";
 
 async function checkContextMenus(): Promise<void> {
   try {
-    const menus = [await buildItemMenu(), await buildBackgroundMenu()];
+    const menus = [
+      await buildItemMenu(),
+      await buildItemMenu("/tmp/some-folder"),
+      await buildBackgroundMenu(),
+    ];
     await Promise.all(menus.map((m) => m.close()));
     console.info("[navita] selfcheck context menus ok");
   } catch (error) {

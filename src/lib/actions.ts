@@ -1,6 +1,6 @@
 import { commands, toAppError } from "../api/commands";
 import { nextSort, type SortKey } from "./sort";
-import { createFolder, startRename, trashSelection } from "./fileOps";
+import { createItem, startRename, trashSelection } from "./fileOps";
 import { describeError, openSelected } from "./open";
 import { getSelectedEntries } from "./selected";
 import { useNavigation } from "../state/navigation";
@@ -110,7 +110,7 @@ export function dispatchAction(id: string): void {
       return;
     }
     case "file.newFolder":
-      void createFolder();
+      void createItem("folder");
       return;
     case "file.rename":
       startRename();

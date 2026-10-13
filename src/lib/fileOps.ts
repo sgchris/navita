@@ -62,16 +62,26 @@ export async function commitRename(entry: Entry, newName: string): Promise<Renam
   }
 }
 
-/** New Folder: creates `untitled folder`, selects it and starts renaming it (decisions B33). */
-export async function createFolder(): Promise<void> {
-  const parent = useNavigation.getState().currentPath;
-  if (parent === null || useListing.getState().status !== "ready") return;
+export type NewItemKind = "folder" | "file";
+
+/**
+ * New Folder / New File (decisions B33). Without `folder` the item is created in the current
+ * folder, selected and renamed in place. With another `folder` (context menu on a folder) the item
+ * is created inside it, then that folder is opened so the new item can be named right away.
+ */
+export async function createItem(kind: NewItemKind, folder?: string): Promise<void> {
+  const current = useNavigation.getState().currentPath;
+  if (current === null || useListing.getState().status !== "ready") return;
+  const parent = folder ?? current;
   try {
-    const newPath = await commands.createFolder(parent);
-    await useNavigation.getState().refresh();
+    const newPath =
+      kind === "folder" ? await commands.createFolder(parent) : await commands.createFile(parent);
+    const navigation = useNavigation.getState();
+    if (parent === current) await navigation.refresh();
+    else await navigation.navigate(parent);
     if (selectIfVisible(newPath)) useUi.getState().setRenamingPath(newPath);
   } catch (e) {
-    useUi.getState().flash(`Couldn’t create folder: ${describeError(toAppError(e))}`);
+    useUi.getState().flash(`Couldn’t create ${kind}: ${describeError(toAppError(e))}`);
   }
 }
 

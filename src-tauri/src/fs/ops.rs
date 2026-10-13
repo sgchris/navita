@@ -11,7 +11,8 @@ use crate::fs::canonical_dir;
 
 const MAX_NAME_BYTES: usize = 255;
 const NEW_FOLDER_NAME: &str = "untitled folder";
-const MAX_NEW_FOLDER_ATTEMPTS: u32 = 10_000;
+const NEW_FILE_NAME: &str = "untitled file";
+const MAX_NEW_ITEM_ATTEMPTS: u32 = 10_000;
 const PROTECTED_HOME_FOLDERS: [&str; 9] = [
     "Desktop",
     "Documents",
@@ -98,20 +99,22 @@ fn protected_error(path: &Path) -> AppError {
     }
 }
 
-/// Creates `untitled folder`, `untitled folder 2`, ... inside `parent` (decisions B33).
-///
-/// # Errors
-/// Path validation or the first non-collision I/O error.
-pub fn create_folder(parent: &str) -> Result<String, AppError> {
+/// Creates `base`, `base 2`, `base 3`, ... inside `parent` using `create`, which must fail with
+/// `AlreadyExists` when the path is taken. Returns the path that was created.
+fn create_unique(
+    parent: &str,
+    base: &str,
+    create: impl Fn(&Path) -> std::io::Result<()>,
+) -> Result<String, AppError> {
     let dir = canonical_dir(parent)?;
-    for attempt in 1..=MAX_NEW_FOLDER_ATTEMPTS {
+    for attempt in 1..=MAX_NEW_ITEM_ATTEMPTS {
         let name = if attempt == 1 {
-            NEW_FOLDER_NAME.to_owned()
+            base.to_owned()
         } else {
-            format!("{NEW_FOLDER_NAME} {attempt}")
+            format!("{base} {attempt}")
         };
         let target = dir.join(&name);
-        match fs::create_dir(&target) {
+        match create(&target) {
             Ok(()) => return Ok(target.to_string_lossy().into_owned()),
             Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
             Err(e) => return Err(AppError::from_io(&e, &target)),
@@ -119,7 +122,29 @@ pub fn create_folder(parent: &str) -> Result<String, AppError> {
     }
     Err(AppError::Io {
         path: dir.to_string_lossy().into_owned(),
-        message: "Too many folders named “untitled folder”.".to_owned(),
+        message: format!("Too many items named “{base}”."),
+    })
+}
+
+/// Creates `untitled folder`, `untitled folder 2`, ... inside `parent` (decisions B33).
+///
+/// # Errors
+/// Path validation or the first non-collision I/O error.
+pub fn create_folder(parent: &str) -> Result<String, AppError> {
+    create_unique(parent, NEW_FOLDER_NAME, |target| fs::create_dir(target))
+}
+
+/// Creates an empty `untitled file`, `untitled file 2`, ... inside `parent`.
+///
+/// # Errors
+/// Path validation or the first non-collision I/O error.
+pub fn create_file(parent: &str) -> Result<String, AppError> {
+    create_unique(parent, NEW_FILE_NAME, |target| {
+        fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(target)
+            .map(|_| ())
     })
 }
 
@@ -239,7 +264,8 @@ pub fn trash_paths(
 #[cfg(test)]
 mod tests {
     use super::{
-        SystemTrash, Trasher, create_folder, is_protected, rename_path, trash_paths, validate_name,
+        SystemTrash, Trasher, create_file, create_folder, is_protected, rename_path, trash_paths,
+        validate_name,
     };
     use crate::error::AppError;
     use std::cell::RefCell;
@@ -330,6 +356,53 @@ mod tests {
             names(dir.path()),
             ["untitled folder", "untitled folder 2", "untitled folder 3"]
         );
+    }
+
+    #[test]
+    fn create_file_picks_the_next_free_name_and_creates_an_empty_file() {
+        let dir = tempfile::tempdir().unwrap();
+        let parent = dir.path().to_str().unwrap();
+        let first = create_file(parent).unwrap();
+        assert!(first.ends_with("/untitled file"));
+        assert!(create_file(parent).unwrap().ends_with("/untitled file 2"));
+        let third = create_file(parent).unwrap();
+        assert!(third.ends_with("/untitled file 3"));
+        let meta = fs::metadata(&third).unwrap();
+        assert!(meta.is_file());
+        assert_eq!(meta.len(), 0);
+        assert_eq!(
+            names(dir.path()),
+            ["untitled file", "untitled file 2", "untitled file 3"]
+        );
+    }
+
+    #[test]
+    fn create_file_skips_a_folder_with_the_same_name() {
+        let dir = tempfile::tempdir().unwrap();
+        fs::create_dir(dir.path().join("untitled file")).unwrap();
+        let created = create_file(dir.path().to_str().unwrap()).unwrap();
+        assert!(created.ends_with("/untitled file 2"));
+        assert!(Path::new(&created).is_file());
+    }
+
+    #[test]
+    fn create_file_errors() {
+        assert!(matches!(
+            create_file("relative"),
+            Err(AppError::InvalidPath { .. })
+        ));
+        let dir = tempfile::tempdir().unwrap();
+        let file = dir.path().join("f");
+        fs::write(&file, b"").unwrap();
+        assert!(matches!(
+            create_file(file.to_str().unwrap()),
+            Err(AppError::NotADirectory { .. })
+        ));
+        let missing = dir.path().join("missing");
+        assert!(matches!(
+            create_file(missing.to_str().unwrap()),
+            Err(AppError::NotFound { .. })
+        ));
     }
 
     #[test]
