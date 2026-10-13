@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>NSDesktopFolderUsageDescription</key>
+    <string>Navita shows the contents of your Desktop folder.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>Navita shows the contents of your Documents folder.</string>
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>Navita shows the contents of your Downloads folder.</string>
+    <key>NSRemovableVolumesUsageDescription</key>
+    <string>Navita shows the contents of external drives.</string>
+    <key>NSNetworkVolumesUsageDescription</key>
+    <string>Navita shows the contents of network volumes.</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Navita asks Finder to show the Get Info window for a selected item.</string>
+  </dict>
+</plist>

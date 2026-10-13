@@ -15,7 +15,8 @@
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
     "lint:rust": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
     "fmt:rust:check": "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run fmt:rust:check && npm run lint:rust && npm run test:rust"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run fmt:rust:check && npm run lint:rust && npm run test:rust && npm run bindings:check",
+    "bindings:check": "git diff --quiet -- src/api/bindings || (echo 'src/api/bindings changed after cargo test: review and git add it' && exit 1)"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.14.18",
